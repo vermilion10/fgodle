@@ -5,11 +5,11 @@
       <div class="cell cell-servant">Servant</div>
       <div class="cell">Class</div>
       <div class="cell">Rarity</div>
-      <div class="cell hide-on-mobile">Attribute</div>
       <div class="cell">Gender</div>
-      <div class="cell hide-on-mobile">Alignment</div>
       <div class="cell">NP Card</div>
       <div class="cell">NP Target</div>
+      <div class="cell">Attribute</div>
+      <div class="cell">Alignment</div>
     </div>
 
     <!-- Guess rows -->
@@ -49,24 +49,10 @@
           <span class="result-icon">{{ resultIcon(row.results.rarity.result) }}</span>
         </div>
 
-        <!-- Attribute -->
-        <div class="cell hide-on-mobile" :class="resultClass(row.results.attribute.result)">
-          <span class="attr-badge" :class="'attr-' + row.results.attribute.value">
-            {{ formatAttr(String(row.results.attribute.value)) }}
-          </span>
-          <span class="result-icon">{{ resultIcon(row.results.attribute.result) }}</span>
-        </div>
-
         <!-- Gender -->
         <div class="cell" :class="resultClass(row.results.gender.result)">
           <span class="gender-icon">{{ genderIcon(String(row.results.gender.value)) }}</span>
           <span class="result-icon">{{ resultIcon(row.results.gender.result) }}</span>
-        </div>
-
-        <!-- Alignment -->
-        <div class="cell hide-on-mobile" :class="resultClass(row.results.alignment.result)">
-          <span class="align-text">{{ row.results.alignment.value }}</span>
-          <span class="result-icon">{{ resultIcon(row.results.alignment.result) }}</span>
         </div>
 
         <!-- NP Card -->
@@ -84,6 +70,20 @@
           </span>
           <span class="result-icon">{{ resultIcon(row.results.npTarget.result) }}</span>
         </div>
+
+        <!-- Attribute -->
+        <div class="cell" :class="resultClass(row.results.attribute.result)">
+          <span class="attr-badge" :class="'attr-' + row.results.attribute.value">
+            {{ formatAttr(String(row.results.attribute.value)) }}
+          </span>
+          <span class="result-icon">{{ resultIcon(row.results.attribute.result) }}</span>
+        </div>
+
+        <!-- Alignment -->
+        <div class="cell" :class="resultClass(row.results.alignment.result)">
+          <span class="align-text">{{ row.results.alignment.value }}</span>
+          <span class="result-icon">{{ resultIcon(row.results.alignment.result) }}</span>
+        </div>
       </div>
     </TransitionGroup>
 
@@ -99,9 +99,9 @@
       </div>
       <div class="cell"><span class="placeholder-dash">—</span></div>
       <div class="cell"><span class="placeholder-dash">—</span></div>
-      <div class="cell hide-on-mobile"><span class="placeholder-dash">—</span></div>
       <div class="cell"><span class="placeholder-dash">—</span></div>
-      <div class="cell hide-on-mobile"><span class="placeholder-dash">—</span></div>
+      <div class="cell"><span class="placeholder-dash">—</span></div>
+      <div class="cell"><span class="placeholder-dash">—</span></div>
       <div class="cell"><span class="placeholder-dash">—</span></div>
       <div class="cell"><span class="placeholder-dash">—</span></div>
     </div>
@@ -352,12 +352,9 @@ function formatNpTarget(target: string) {
 
 /* Mobile styling */
 @media (max-width: 768px) {
-  .hide-on-mobile {
-    display: none !important;
-  }
   .grid-row {
-    grid-template-columns: 140px repeat(5, minmax(60px, 1fr));
-    min-width: unset;
+    grid-template-columns: 130px repeat(7, minmax(64px, 1fr));
+    min-width: 600px; /* Forces sideways scroll */
   }
   .header-row .cell {
     font-size: 0.55rem;
@@ -365,6 +362,7 @@ function formatNpTarget(target: string) {
   }
   .cell {
     padding: 6px 4px;
+    font-size: 0.72rem;
   }
   .cell-servant {
     flex-direction: column !important;
