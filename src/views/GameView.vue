@@ -43,6 +43,27 @@
             </button>
           </div>
 
+          <!-- Difficulty selector (Unlimited only) -->
+          <Transition name="fade-slide">
+            <div v-if="store.gameMode === 'unlimited'" class="difficulty-row">
+              <button
+                class="diff-btn diff-easy"
+                :class="{ active: store.difficulty === 'easy' }"
+                @click="store.setDifficulty('easy')"
+              >Easy (12)</button>
+              <button
+                class="diff-btn diff-normal"
+                :class="{ active: store.difficulty === 'normal' }"
+                @click="store.setDifficulty('normal')"
+              >Normal (8)</button>
+              <button
+                class="diff-btn diff-hard"
+                :class="{ active: store.difficulty === 'hard' }"
+                @click="store.setDifficulty('hard')"
+              >Hard (5)</button>
+            </div>
+          </Transition>
+
           <div class="hero-progress">
             <div class="progress-track">
               <div
@@ -242,7 +263,7 @@ const progressPct = computed(() => {
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   padding: 4px;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
 }
 
 .mode-btn {
@@ -269,6 +290,42 @@ const progressPct = computed(() => {
   color: #1a1000;
   box-shadow: var(--shadow-gold);
 }
+
+/* Difficulty selector */
+.difficulty-row {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 1.25rem;
+}
+
+.diff-btn {
+  padding: 5px 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  color: var(--text-muted);
+  font-family: var(--font-title);
+  font-size: 0.72rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  letter-spacing: 0.5px;
+}
+
+.diff-easy.active  { background: rgba(67,160,71,0.15); color: #81c784; border-color: #43a047; }
+.diff-normal.active{ background: rgba(251,140,0,0.15); color: #ffb74d; border-color: #fb8c00; }
+.diff-hard.active  { background: rgba(198,40,40,0.15); color: #ef9a9a; border-color: #c62828; }
+
+.diff-easy:hover  { border-color: #43a047; color: #81c784; }
+.diff-normal:hover{ border-color: #fb8c00; color: #ffb74d; }
+.diff-hard:hover  { border-color: #c62828; color: #ef9a9a; }
+
+/* Fade-slide transition for difficulty row */
+.fade-slide-enter-active { transition: all 0.3s ease; }
+.fade-slide-leave-active { transition: all 0.2s ease; }
+.fade-slide-enter-from { opacity: 0; transform: translateY(-8px); }
+.fade-slide-leave-to   { opacity: 0; transform: translateY(-8px); }
 
 /* Progress */
 .hero-progress {

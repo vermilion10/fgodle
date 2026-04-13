@@ -24,6 +24,10 @@ export interface SlimServant {
 
 export type GuessResult = 'correct' | 'wrong' | 'partial'
 
+export type Difficulty = 'easy' | 'normal' | 'hard'
+
+export type HintableColumn = 'className' | 'rarity' | 'gender' | 'npCard' | 'npTarget' | 'attribute' | 'alignment'
+
 export interface GuessAttribute {
   value: string | number | boolean
   result: GuessResult

@@ -9,12 +9,23 @@
       <section class="htp-section">
         <h2 class="section-title">Rules</h2>
         <ul class="rules-list">
-          <li>Each day a new servant is chosen</li>
+          <li>Each day a new servant is chosen for <strong class="gold">Daily Mode</strong></li>
           <li>Search and select any servant to make a guess</li>
           <li>You have <strong class="gold">8 attempts</strong> to guess correctly</li>
-          <li>After each guess, cells will reveal how close you are</li>
-          <li><strong class="gold">Hint:</strong> The servant's Class badge color matches their NP Card (Red = Buster, Blue = Arts, Green = Quick)</li>
-          <li>The same servant refreshes at midnight</li>
+          <li>After each guess, cells reveal how close you are to the answer</li>
+          <li><strong class="gold">Tip:</strong> The servant's Class badge color matches their NP Card type (Red = Buster, Blue = Arts, Green = Quick)</li>
+          <li>The daily servant resets at midnight every day</li>
+        </ul>
+      </section>
+
+      <section class="htp-section">
+        <h2 class="section-title">💡 Hint Rows (Daily Only)</h2>
+        <p class="hint-intro">Rows <strong class="gold">5</strong> and <strong class="gold">8</strong> are special <em>Hint Rows</em>. They appear greyed-out and locked from the start of the game.</p>
+        <ul class="rules-list">
+          <li>When you reach <strong class="gold">row 5</strong> (after 4 guesses), it unlocks — you may click <strong class="gold">1 cell</strong> to peek at the answer's exact value for that column before guessing</li>
+          <li>When you reach <strong class="gold">row 8</strong> (your final attempt), it unlocks — you may reveal up to <strong class="gold">3 cells</strong> to help with your last guess</li>
+          <li>Revealing a hint is always optional — you can skip and guess directly</li>
+          <li>Once you submit your guess on a hint row, it shows normal results like all other rows</li>
         </ul>
       </section>
 
@@ -64,6 +75,25 @@
               <strong>{{ attr.name }}</strong>
               <p>{{ attr.desc }}</p>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="htp-section">
+        <h2 class="section-title">🎮 Game Modes</h2>
+        <div class="mode-cards">
+          <div class="mode-card">
+            <div class="mode-card-title">📅 Daily Mode</div>
+            <p>A new servant every day, shared globally. Your progress is saved. Includes Hint Rows at rows 5 and 8.</p>
+          </div>
+          <div class="mode-card">
+            <div class="mode-card-title">♾ Unlimited Mode</div>
+            <p>Guess randomly selected servants endlessly. Choose your difficulty:</p>
+            <ul class="diff-list">
+              <li><span class="diff-tag easy">Easy</span> — 12 guesses, relaxed challenge</li>
+              <li><span class="diff-tag normal">Normal</span> — 8 guesses, standard challenge</li>
+              <li><span class="diff-tag hard">Hard</span> — Only 5 guesses, test your knowledge!</li>
+            </ul>
           </div>
         </div>
       </section>
@@ -160,6 +190,69 @@ const attributes = [
 }
 
 .gold { color: var(--gold); }
+
+.hint-intro {
+  font-size: 0.92rem;
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}
+
+/* Mode cards */
+.mode-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+@media (max-width: 540px) { .mode-cards { grid-template-columns: 1fr; } }
+
+.mode-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+}
+.mode-card-title {
+  font-family: var(--font-title);
+  font-size: 0.9rem;
+  color: var(--gold);
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.5px;
+}
+.mode-card p {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin-bottom: 0.5rem;
+}
+
+.diff-list {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 6px;
+}
+.diff-list li {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.diff-tag {
+  display: inline-block;
+  padding: 1px 8px;
+  border-radius: 20px;
+  font-weight: 700;
+  font-size: 0.72rem;
+  border: 1px solid;
+}
+.diff-tag.easy   { background: rgba(67,160,71,.15);  color: #81c784; border-color: #43a047; }
+.diff-tag.normal { background: rgba(251,140,0,.15);  color: #ffb74d; border-color: #fb8c00; }
+.diff-tag.hard   { background: rgba(198,40,40,.15);  color: #ef9a9a; border-color: #c62828; }
 
 /* Color examples */
 .color-example {

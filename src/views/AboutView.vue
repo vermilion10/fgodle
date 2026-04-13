@@ -12,12 +12,14 @@
       <section class="rule-section">
         <h2>🌟 Features</h2>
         <ul class="feature-list">
-          <li><strong>Daily Mode</strong>: Guess the preset servant of the day! A new servant is carefully selected every day. Your streak and stats are saved locally.</li>
-          <li><strong>Unlimited Mode</strong>: Want to keep guessing? Play in unlimited mode and guess random servants endlessly!</li>
-          <li><strong>Detailed Clues</strong>: Offers comprehensive visual hints (Rarity, Class, NP Card, NP Type, Attribute, Alignment, Gender, and Traits).</li>
-          <li><strong>Share Your Result</strong>: Easily generate a beautiful shareable image of your results, complete with a QR Code for your friends.</li>
-          <li><strong>Always Up to Date</strong>: Data is synchronized automatically from the Japanese server using GitHub Actions and the Atlas Academy API. Fully automated CI/CD pipeline!</li>
-          <li><strong>Mobile Responsive</strong>: The UI automatically shifts and hides redundant clues on mobile screens for a better experience.</li>
+          <li><strong>Daily Mode</strong>: Guess the preset servant of the day! A new servant is carefully selected every day. Your progress and streak are saved locally.</li>
+          <li><strong>Unlimited Mode</strong>: Want to keep guessing? Play in unlimited mode with random servants, with selectable difficulty (Easy / Normal / Hard).</li>
+          <li><strong>Hint Rows</strong> <em>(Daily only)</em>: Rows 5 and 8 are special hint rows. Row 5 lets you peek at 1 cell; row 8 lets you reveal up to 3 cells — giving you a fighting chance on your toughest guesses.</li>
+          <li><strong>Reveal Animation</strong>: Every submitted guess triggers a smooth card-flip animation column by column, just like the classic Wordle.</li>
+          <li><strong>Detailed Clues</strong>: Offers comprehensive visual hints — Rarity, Class, NP Card, NP Type, Attribute, Alignment, and Gender.</li>
+          <li><strong>Share Your Result</strong>: Generate a beautiful shareable image of your results, complete with a QR code linking back to FGOdle.</li>
+          <li><strong>Always Up to Date</strong>: Servant data is synchronized automatically from the JP server using GitHub Actions and the Atlas Academy API.</li>
+          <li><strong>Mobile Responsive</strong>: Fully scrollable grid works on any screen size.</li>
         </ul>
       </section>
 
@@ -38,7 +40,7 @@
           <li><strong>Data Source</strong>: <a href="https://api.atlasacademy.io/" target="_blank">Atlas Academy API</a> - Provides the extensive FGO databases.</li>
           <li><strong>Game Concept</strong>: Inspired by the original Wordle and various fandom iterations.</li>
           <li><strong>Animations</strong>: GIFs provided via <a href="https://tenor.com/" target="_blank">Tenor</a>.</li>
-          <li><strong>Original Developer</strong>: <a href="https://github.com/vermilion10" target="_blank">vermilion10</a></li>
+          <li><strong>Original Developer</strong>: <a href="https://vermilion10.pages.dev/" target="_blank">vermilion10</a></li>
         </ul>
       </section>
       
