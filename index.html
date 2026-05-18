@@ -5,10 +5,17 @@
     <link rel="icon" type="image/webp" href="/fgodle/fgo_diamond.webp" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="FGOdle — A daily Fate/Grand Order Wordle. Guess the mystery servant using class, rarity, attribute, gender, alignment, and trait clues!" />
-    <meta name="theme-color" content="#0a0a12" />
+    <meta name="theme-color" content="#131318" />
     <title>FGOdle — Fate/Grand Order Wordle</title>
-    <script type="module" crossorigin src="/fgodle/assets/index-BZwyuFRD.js"></script>
-    <link rel="stylesheet" crossorigin href="/fgodle/assets/index-z7f2e-W5.css">
+    <!-- Anti-FOUC: apply saved theme before Vue renders -->
+    <script>
+      (function() {
+        var t = localStorage.getItem('fgo-wordle-theme');
+        document.documentElement.setAttribute('data-theme', t === 'light' ? 'light' : 'dark');
+      })();
+    </script>
+    <script type="module" crossorigin src="/fgodle/assets/index-C1jA0d2-.js"></script>
+    <link rel="stylesheet" crossorigin href="/fgodle/assets/index-D1VAQo29.css">
   </head>
   <body>
     <div id="app"></div>
