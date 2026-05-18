@@ -5,11 +5,30 @@ import type { SlimServant, GuessRow, GuessResult, Difficulty, HintableColumn } f
 const SERVANTS_URL = import.meta.env.BASE_URL + 'fgo-servants.json'
 
 // Hint rows at 0-indexed positions 4 and 7
-// User can reveal up to maxReveal cells before submitting their guess on that row
 export const HINT_ROW_CONFIG = [
   { rowIdx: 4, maxReveal: 1 },
   { rowIdx: 7, maxReveal: 3 },
 ] as const
+
+// ─── Stats type ───────────────────────────────────────────────────────────────
+interface GameStats {
+  totalGames: number
+  totalWins: number
+  currentStreak: number
+  maxStreak: number
+  /** guessDist[i] = number of games won in (i+1) guesses. length 8. */
+  guessDist: number[]
+  lastPlayed: string | null
+}
+
+const DEFAULT_STATS: GameStats = {
+  totalGames: 0,
+  totalWins: 0,
+  currentStreak: 0,
+  maxStreak: 0,
+  guessDist: Array(8).fill(0),
+  lastPlayed: null,
+}
 
 function compareGuess(guessed: SlimServant, answer: SlimServant): GuessRow['results'] {
   const rarityDiff = Math.abs(guessed.rarity - answer.rarity)
@@ -46,18 +65,98 @@ export const useServantStore = defineStore('servant', () => {
   const gameMode = ref<GameMode>('daily')
   const difficulty = ref<Difficulty>('normal')
 
+  // ─── Stats ─────────────────────────────────────────────────────────────────
+  const stats = ref<GameStats>({ ...DEFAULT_STATS })
+  const showStats = ref(false)
+  const showAbout = ref(false)
+  const showHowToPlay = ref(false)
+
+  // ─── Theme ─────────────────────────────────────────────────────────────────
+  const savedTheme = localStorage.getItem('fgo-wordle-theme')
+  const theme = ref<'dark' | 'light'>(savedTheme === 'light' ? 'light' : 'dark')
+
+  function applyTheme(t: string) {
+    document.documentElement.setAttribute('data-theme', t)
+  }
+
+  function toggleTheme() {
+    theme.value = theme.value === 'dark' ? 'light' : 'dark'
+    localStorage.setItem('fgo-wordle-theme', theme.value)
+    applyTheme(theme.value)
+  }
+
+  // Apply immediately on store init
+  applyTheme(theme.value)
+
+  function loadStats() {
+    try {
+      const raw = localStorage.getItem('fgo-wordle-stats')
+      if (raw) {
+        const parsed = JSON.parse(raw) as Partial<GameStats>
+        stats.value = {
+          totalGames:    parsed.totalGames    ?? 0,
+          totalWins:     parsed.totalWins     ?? 0,
+          currentStreak: parsed.currentStreak ?? 0,
+          maxStreak:     parsed.maxStreak     ?? 0,
+          guessDist:     parsed.guessDist     ?? Array(8).fill(0),
+          lastPlayed:    parsed.lastPlayed    ?? null,
+        }
+      }
+    } catch { /* ignore */ }
+  }
+
+  function saveStats() {
+    localStorage.setItem('fgo-wordle-stats', JSON.stringify(stats.value))
+  }
+
+  function recordGameResult(guessCount: number, isWin: boolean) {
+    const today = getDateString()
+    // Avoid double-counting if already recorded today
+    if (stats.value.lastPlayed === today) return
+
+    stats.value.totalGames++
+    stats.value.lastPlayed = today
+
+    if (isWin) {
+      stats.value.totalWins++
+      stats.value.currentStreak++
+      if (stats.value.currentStreak > stats.value.maxStreak) {
+        stats.value.maxStreak = stats.value.currentStreak
+      }
+      const distIdx = Math.min(guessCount - 1, 7)
+      stats.value.guessDist[distIdx]++
+    } else {
+      stats.value.currentStreak = 0
+    }
+
+    saveStats()
+  }
+
+  // ─── Class filter ───────────────────────────────────────────────────────────
+  const classFilter = ref<string | null>(null)
+
+  // ─── Yesterday's servant ────────────────────────────────────────────────────
+  const yesterdayServant = computed<SlimServant | null>(() => {
+    if (!allServants.value.length) return null
+    const t = new Date()
+    t.setDate(t.getDate() - 1)
+    const y = t.getFullYear()
+    const m = t.getMonth() + 1
+    const d = t.getDate()
+    const seed = y * 10000 + m * 100 + d
+    return allServants.value[seed % allServants.value.length] ?? null
+  })
+
   const maxGuesses = computed(() => {
     if (gameMode.value === 'daily') return 8
     const map: Record<Difficulty, number> = { easy: 12, normal: 8, hard: 5 }
     return map[difficulty.value]
   })
 
-  // key = rowIdx (4 or 7), value = Set of revealed columns for that hint row
   const revealedHints = ref<Map<number, Set<HintableColumn>>>(
     new Map(HINT_ROW_CONFIG.map(c => [c.rowIdx, new Set<HintableColumn>()]))
   )
 
-  // Which hint row is currently "active"
   const activeHintRowIdx = computed<number | null>(() => {
     if (gameMode.value !== 'daily' || gameOver.value) return null
     for (const cfg of HINT_ROW_CONFIG) {
@@ -66,7 +165,6 @@ export const useServantStore = defineStore('servant', () => {
     return null
   })
 
-  // Animation
   const revealingRowId = ref<number | null>(null)
 
   const searchQuery = ref('')
@@ -78,6 +176,8 @@ export const useServantStore = defineStore('servant', () => {
     return allServants.value
       .filter(s => {
         if (guessedIds.has(s.id)) return false
+        // Class filter
+        if (classFilter.value && s.className !== classFilter.value) return false
         if (s.name.toLowerCase().includes(q)) return true
         if (s.className.toLowerCase().includes(q)) return true
         if (s.aliases.some(a => a.toLowerCase().includes(q))) return true
@@ -89,6 +189,7 @@ export const useServantStore = defineStore('servant', () => {
   async function fetchServants() {
     loading.value = true
     error.value = null
+    loadStats()
     try {
       const res = await fetch(SERVANTS_URL)
       if (!res.ok) throw new Error(`Failed to load servant data (${res.status})`)
@@ -127,7 +228,6 @@ export const useServantStore = defineStore('servant', () => {
               guesses.value = state.guesses
               gameOver.value = state.gameOver
               won.value = state.won
-              // Restore hint state: stored as [[rowIdx, [col,col,...]], ...]
               if (state.revealedHints) {
                 const restored = new Map<number, Set<HintableColumn>>()
                 for (const [k, v] of state.revealedHints) {
@@ -155,10 +255,6 @@ export const useServantStore = defineStore('servant', () => {
     startNewGame('unlimited')
   }
 
-  /**
-   * Reveal a hint cell for the hint row at the given rowIdx.
-   * Only works when that row is the active hint row and reveals < maxReveal.
-   */
   function revealHint(rowIdx: number, column: HintableColumn) {
     if (gameMode.value !== 'daily') return
     if (activeHintRowIdx.value !== rowIdx) return
@@ -183,18 +279,24 @@ export const useServantStore = defineStore('servant', () => {
     revealingRowId.value = servant.id
     setTimeout(() => { revealingRowId.value = null }, 900)
 
-    if (servant.id === todayAnswer.value.id) {
+    const isCorrect = servant.id === todayAnswer.value.id
+    if (isCorrect) {
       won.value = true
       gameOver.value = true
     } else if (guesses.value.length >= maxGuesses.value) {
       gameOver.value = true
     }
 
-    if (gameMode.value === 'daily') saveState()
+    if (gameMode.value === 'daily') {
+      saveState()
+      // Record stats only when game ends in daily mode
+      if (gameOver.value) {
+        recordGameResult(guesses.value.length, won.value)
+      }
+    }
   }
 
   function saveState() {
-    // Serialize Map<number, Set<HintableColumn>> as [[number, string[]], ...]
     const serializedHints = [...revealedHints.value.entries()].map(([k, v]) => [k, [...v]])
     localStorage.setItem('fgo-wordle-state', JSON.stringify({
       date: getDateString(),
@@ -212,6 +314,10 @@ export const useServantStore = defineStore('servant', () => {
     maxGuesses, gameMode, difficulty,
     revealedHints, activeHintRowIdx, revealingRowId,
     searchQuery, filteredServants,
+    classFilter,
+    stats, showStats, showAbout, showHowToPlay,
+    theme, toggleTheme,
+    yesterdayServant,
     fetchServants, submitGuess, startNewGame, playAgain, setDifficulty, revealHint,
   }
 })

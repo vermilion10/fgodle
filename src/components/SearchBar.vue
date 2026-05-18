@@ -1,18 +1,35 @@
 <template>
   <div class="search-wrapper">
+
+    <!-- Class filter chips -->
+    <div class="chip-bar" v-if="!store.gameOver">
+      <button
+        v-for="cls in classes"
+        :key="cls.value ?? 'all'"
+        class="chip"
+        :class="{ active: store.classFilter === cls.value }"
+        @click="setFilter(cls.value)"
+      >
+        {{ cls.label }}
+      </button>
+    </div>
+
+    <!-- Search box -->
     <div class="search-box" :class="{ disabled: store.gameOver }">
-      <span class="search-icon">🔍</span>
+      <svg class="search-icon-svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+      </svg>
       <input
         v-if="!store.gameOver"
         id="servant-search"
         v-model="store.searchQuery"
         type="text"
-        placeholder="Start typing a servant name..."
+        :placeholder="searchPlaceholder"
         autocomplete="off"
         @keydown.escape="store.searchQuery = ''"
       />
       <div v-else class="search-disabled-text">
-        {{ store.won ? '✨ Congratulations!' : '💀 Game Over' }}
+        {{ store.won ? '✨ Correct!' : '💀 Game Over' }}
       </div>
     </div>
 
@@ -33,7 +50,7 @@
               <span class="tag class-tag" :class="'np-' + servant.npCard">
                 {{ formatClass(servant.className) }}
               </span>
-              <span class="tag">{{ '★'.repeat(servant.rarity) }}</span>
+              <span class="tag rarity-tag">{{ '★'.repeat(servant.rarity) }}</span>
             </div>
           </div>
         </div>
@@ -43,10 +60,39 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import { useServantStore } from '../stores/servantStore'
 import type { SlimServant } from '../types/servant'
 
 const store = useServantStore()
+
+// All available classes as chips
+const classes = [
+  { label: 'All',        value: null },
+  { label: 'Saber',      value: 'saber' },
+  { label: 'Archer',     value: 'archer' },
+  { label: 'Lancer',     value: 'lancer' },
+  { label: 'Rider',      value: 'rider' },
+  { label: 'Caster',     value: 'caster' },
+  { label: 'Assassin',   value: 'assassin' },
+  { label: 'Berserker',  value: 'berserker' },
+  { label: 'Ruler',      value: 'ruler' },
+  { label: 'Avenger',    value: 'avenger' },
+  { label: 'Foreigner',  value: 'foreigner' },
+  { label: 'Pretender',  value: 'pretender' },
+  { label: 'Alter Ego',  value: 'alterEgo' },
+  { label: 'Moon Cancer',value: 'moonCancer' },
+  { label: 'Shielder',   value: 'shielder' },
+]
+
+function setFilter(val: string | null) {
+  store.classFilter = store.classFilter === val ? null : val
+}
+
+const searchPlaceholder = computed(() => {
+  const cls = classes.find(c => c.value === store.classFilter)
+  return cls && cls.value ? `Search ${cls.label} servant…` : 'Search a servant name…'
+})
 
 function onSelect(servant: SlimServant) {
   store.submitGuess(servant)
@@ -66,39 +112,72 @@ function handleImgError(e: Event) {
 .search-wrapper {
   position: relative;
   width: 100%;
-  max-width: 620px;
+  max-width: 600px;
   margin: 0 auto;
 }
 
+/* ─── Chip bar ──────────────────────────────────────────────────────────────── */
+.chip-bar {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding-bottom: 10px;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  -webkit-overflow-scrolling: touch;
+}
+.chip-bar::-webkit-scrollbar { display: none; }
+
+.chip {
+  flex-shrink: 0;
+  padding: 5px 12px;
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--border-medium);
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.chip:hover {
+  border-color: var(--primary-dim);
+  color: var(--text-secondary);
+  background: var(--border-subtle);
+}
+.chip.active {
+  background: var(--primary-bg);
+  color: var(--primary);
+  border-color: var(--primary-dim);
+}
+
+/* ─── Search box ────────────────────────────────────────────────────────────── */
 .search-box {
   display: flex;
   align-items: center;
   gap: 10px;
-  background: var(--bg-card);
-  border: 1px solid var(--border-hover);
+  background: var(--surface-2, #262630);
   border-radius: var(--radius-md);
   padding: 12px 16px;
-  transition: all 0.2s ease;
-  box-shadow: var(--shadow-gold);
+  transition: background 0.15s;
+  border: 1px solid var(--border-medium);
 }
 
 .search-box:not(.disabled):focus-within {
-  border-color: var(--gold);
-  background: var(--bg-card-hover);
-  box-shadow: 0 0 0 3px rgba(201, 168, 76, 0.15), var(--shadow-gold);
+  background: var(--surface-3);
+  border-color: var(--primary);
 }
 
 .search-box.disabled {
-  opacity: 0.6;
+  opacity: 0.55;
   cursor: not-allowed;
-  border-color: var(--wrong-border);
 }
 
-.search-icon {
-  font-size: 1rem;
+.search-icon-svg {
   flex-shrink: 0;
+  color: var(--text-muted);
 }
-
 
 input {
   flex: 1;
@@ -107,31 +186,30 @@ input {
   outline: none;
   color: var(--text-primary);
   font-family: var(--font-body);
-  font-size: 1rem;
-  caret-color: var(--gold);
+  font-size: 0.95rem;
+  caret-color: var(--primary);
 }
-
 input::placeholder { color: var(--text-muted); }
 
 .search-disabled-text {
   flex: 1;
   color: var(--text-secondary);
-  font-size: 0.95rem;
+  font-size: 0.9rem;
 }
 
-/* Dropdown */
+/* ─── Dropdown ───────────────────────────────────────────────────────────────── */
 .suggestions {
   position: absolute;
-  top: calc(100% + 6px);
+  top: calc(100% + 4px);
   left: 0;
   right: 0;
-  background: var(--bg-card);
-  border: 1px solid var(--border-hover);
+  background: var(--surface-3);
+  border: 1px solid var(--border-medium);
   border-radius: var(--radius-md);
-  box-shadow: var(--shadow-card), var(--shadow-gold);
+  box-shadow: var(--shadow-3);
   z-index: 50;
   overflow: hidden;
-  max-height: 380px;
+  max-height: 360px;
   overflow-y: auto;
 }
 
@@ -141,23 +219,17 @@ input::placeholder { color: var(--text-muted); }
   gap: 12px;
   padding: 10px 14px;
   cursor: pointer;
-  transition: background 0.15s ease;
-  border-bottom: 1px solid rgba(255,255,255,0.04);
+  transition: background 0.1s;
 }
-
-.suggestion-item:last-child { border-bottom: none; }
-
-.suggestion-item:hover {
-  background: var(--bg-card-hover);
-}
+.suggestion-item + .suggestion-item { border-top: 1px solid var(--divider); }
+.suggestion-item:hover { background: var(--surface-4); }
 
 .suggestion-face {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-sm);
   object-fit: cover;
-  border: 2px solid var(--border);
-  background: var(--wrong);
+  background: var(--surface-1);
   flex-shrink: 0;
 }
 
@@ -168,39 +240,33 @@ input::placeholder { color: var(--text-muted); }
 }
 
 .suggestion-name {
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   font-weight: 500;
   color: var(--text-primary);
 }
 
-.suggestion-tags {
-  display: flex;
-  gap: 6px;
-}
+.suggestion-tags { display: flex; gap: 6px; }
 
 .tag {
   font-size: 0.7rem;
   padding: 2px 8px;
-  border-radius: 20px;
-  background: var(--wrong);
-  color: var(--text-secondary);
-  border: 1px solid var(--wrong-border);
-  letter-spacing: 0.5px;
+  border-radius: var(--radius-xs);
+  background: var(--surface-1);
+  color: var(--text-muted);
 }
 
-/* NP Card colors */
-.np-buster { background: rgba(220, 53, 69, 0.2); color: #ff5252; border-color: rgba(255, 82, 82, 0.4); }
-.np-arts   { background: rgba(13, 110, 253, 0.2); color: #64b5f6; border-color: rgba(100, 181, 246, 0.4); }
-.np-quick  { background: rgba(25, 135, 84, 0.2); color: #81c784; border-color: rgba(129, 199, 132, 0.4); }
+.rarity-tag { color: var(--primary); }
+
+.np-buster { background: rgba(220,53,69,.15); color: #e87676; }
+.np-arts   { background: rgba(70,130,220,.15); color: #82b8f5; }
+.np-quick  { background: rgba(60,160,80,.15); color: #82c896; }
 
 /* Transition */
-.dropdown-enter-active,
-.dropdown-leave-active {
-  transition: all 0.2s ease;
+.dropdown-enter-active, .dropdown-leave-active {
+  transition: opacity 0.15s ease, transform 0.15s ease;
 }
-.dropdown-enter-from,
-.dropdown-leave-to {
+.dropdown-enter-from, .dropdown-leave-to {
   opacity: 0;
-  transform: translateY(-6px);
+  transform: translateY(-4px);
 }
 </style>

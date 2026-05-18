@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap');
 
 /* ─── Local Font ─── */
 @font-face {
@@ -9,47 +9,102 @@
   font-display: swap;
 }
 
-/* ─── CSS Variables ─── */
+/* ─── CSS Variables — MD3 Dark Theme (default) ─── */
 :root {
-  --bg-primary: #0a0a12;
-  --bg-secondary: #111120;
-  --bg-card: #16162a;
-  --bg-card-hover: #1e1e38;
+  /* Tonal surfaces */
+  --bg-primary:     #131318;
+  --surface-1:      #1e1e26;
+  --surface-2:      #262630;
+  --surface-3:      #2e2e3a;
+  --surface-4:      #353542;
 
-  --gold: #c9a84c;
-  --gold-light: #e8d08a;
-  --gold-glow: rgba(201, 168, 76, 0.3);
+  /* Primary — toned gold */
+  --primary:        #c8a85a;
+  --primary-dim:    #a88b45;
+  --primary-bg:     rgba(200, 168, 90, 0.10);
+  --on-primary:     #1c1200;
 
-  --red: #a83232;
-  --red-correct: #c0392b;
+  /* Feedback colors */
+  --correct-bg:     #1b3322;
+  --correct-border: #4a8f56;
+  --correct-text:   #7dc490;
 
-  --correct: #2e7d32;
-  --correct-bg: #1a3d1c;
-  --correct-border: #43a047;
+  --partial-bg:     #332511;
+  --partial-border: #a0712a;
+  --partial-text:   #d4a45c;
 
-  --partial: #e65100;
-  --partial-bg: #3e2000;
-  --partial-border: #fb8c00;
+  --wrong-bg:       #1e1e26;
+  --wrong-border:   #3a3a48;
+  --wrong-text:     #6b6b80;
 
-  --wrong: #2a2a45;
-  --wrong-border: #3d3d5e;
+  /* Text */
+  --text-primary:   #e5e0d8;
+  --text-secondary: #9e9aaa;
+  --text-muted:     #5e5e72;
 
-  --text-primary: #f0e8d8;
-  --text-secondary: #9999bb;
-  --text-muted: #555577;
+  /* Borders */
+  --divider:        rgba(255, 255, 255, 0.08);
+  --border-subtle:  rgba(255, 255, 255, 0.06);
+  --border-medium:  rgba(255, 255, 255, 0.12);
 
-  --border: rgba(201, 168, 76, 0.2);
-  --border-hover: rgba(201, 168, 76, 0.5);
+  /* Danger */
+  --danger: #9b3636;
 
-  --radius-sm: 6px;
-  --radius-md: 10px;
+  /* Radii */
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
   --radius-lg: 16px;
+  --radius-xl: 24px;
 
+  /* Typography */
   --font-title: 'FOT-Skip', 'Inter', sans-serif;
-  --font-body: 'Inter', sans-serif;
+  --font-body:  'Inter', sans-serif;
 
-  --shadow-gold: 0 0 20px rgba(201, 168, 76, 0.15), 0 0 40px rgba(201, 168, 76, 0.08);
-  --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.4);
+  /* Shadows */
+  --shadow-1: 0 1px 3px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.2);
+  --shadow-2: 0 3px 6px rgba(0,0,0,0.35), 0 2px 4px rgba(0,0,0,0.2);
+  --shadow-3: 0 8px 20px rgba(0,0,0,0.4), 0 4px 8px rgba(0,0,0,0.2);
+}
+
+/* ─── Light Theme ─── */
+[data-theme="light"] {
+  --bg-primary:     #f0ede6;
+  --surface-1:      #faf8f4;
+  --surface-2:      #f4f1ea;
+  --surface-3:      #ebe7de;
+  --surface-4:      #e0dbd0;
+
+  --primary:        #8a6820;
+  --primary-dim:    #6e5218;
+  --primary-bg:     rgba(138, 104, 32, 0.10);
+  --on-primary:     #ffffff;
+
+  --correct-bg:     #d0f0d5;
+  --correct-border: #2f7a3c;
+  --correct-text:   #1a4a22;
+
+  --partial-bg:     #fde8c0;
+  --partial-border: #9a6a18;
+  --partial-text:   #5a3e0a;
+
+  --wrong-bg:       #ebe7de;
+  --wrong-border:   #c8c4ba;
+  --wrong-text:     #8a8880;
+
+  --text-primary:   #18161a;
+  --text-secondary: #4e4c58;
+  --text-muted:     #8a8896;
+
+  --divider:        rgba(0, 0, 0, 0.08);
+  --border-subtle:  rgba(0, 0, 0, 0.06);
+  --border-medium:  rgba(0, 0, 0, 0.14);
+
+  --danger: #882020;
+
+  --shadow-1: 0 1px 3px rgba(0,0,0,0.10), 0 1px 2px rgba(0,0,0,0.06);
+  --shadow-2: 0 3px 6px rgba(0,0,0,0.12), 0 2px 4px rgba(0,0,0,0.06);
+  --shadow-3: 0 8px 20px rgba(0,0,0,0.16), 0 4px 8px rgba(0,0,0,0.06);
 }
 
 /* ─── Reset ─── */
@@ -61,10 +116,8 @@ body {
   background-color: var(--bg-primary);
   color: var(--text-primary);
   min-height: 100vh;
-  /* subtle noise texture feel */
-  background-image:
-    radial-gradient(ellipse at 20% 20%, rgba(201, 168, 76, 0.04) 0%, transparent 50%),
-    radial-gradient(ellipse at 80% 80%, rgba(100, 80, 200, 0.06) 0%, transparent 50%);
+  -webkit-font-smoothing: antialiased;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 #app-root {
@@ -74,37 +127,31 @@ body {
 }
 
 /* ─── Scrollbar ─── */
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: var(--bg-secondary); }
-::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: var(--gold); }
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--wrong-border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
 
 /* ─── Utility ─── */
-.gold { color: var(--gold); }
+.primary { color: var(--primary); }
 .text-muted { color: var(--text-secondary); }
 
 /* ─── Animations ─── */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
-@keyframes slideDown {
-  from { opacity: 0; transform: translateY(-12px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-@keyframes pulse-gold {
-  0%, 100% { box-shadow: 0 0 8px var(--gold-glow); }
-  50% { box-shadow: 0 0 20px var(--gold-glow), 0 0 40px rgba(201,168,76,0.15); }
-}
-@keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
-}
+
 @keyframes popIn {
-  0% { transform: scale(0.8); opacity: 0; }
-  60% { transform: scale(1.05); }
+  0%   { transform: scale(0.88); opacity: 0; }
+  60%  { transform: scale(1.03); }
   100% { transform: scale(1); opacity: 1; }
 }
 
-.fade-in { animation: fadeIn 0.4s ease; }
-.pop-in { animation: popIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1); }
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in { animation: fadeIn 0.3s ease; }
+.pop-in  { animation: popIn  0.3s cubic-bezier(0.34, 1.4, 0.64, 1); }

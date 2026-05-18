@@ -1,19 +1,19 @@
 <template>
   <Transition name="result-popup">
     <div v-if="store.gameOver" class="result-overlay">
-      <div class="result-card" :class="store.won ? 'card-win' : 'card-lose'">
+      <div class="result-card" :class="store.won ? 'card-win' : 'card-lose'" @click.stop>
         <!-- Win -->
         <template v-if="store.won">
           <iframe src="https://tenor.com/embed/24133758" class="tenor-gif win-gif" frameBorder="0" scrolling="no"></iframe>
           <h2 class="result-title win-title">Grail Obtained!</h2>
-          <p class="result-subtitle">You identified the servant!</p>
+          <p class="result-subtitle">You identified the servant</p>
         </template>
 
         <!-- Lose -->
         <template v-else>
           <iframe src="https://tenor.com/embed/13991160" class="tenor-gif lose-gif" frameBorder="0" scrolling="no"></iframe>
           <h2 class="result-title lose-title">Rayshift Failed</h2>
-          <p class="result-subtitle">The servant was...</p>
+          <p class="result-subtitle">The servant was…</p>
         </template>
 
         <!-- Reveal servant -->
@@ -39,38 +39,39 @@
         <div class="result-stats">
           <div class="stat">
             <span class="stat-val">{{ store.guesses.length }}</span>
-            <span class="stat-label">Guesses</span>
+            <span class="stat-label">Guesses used</span>
           </div>
           <div class="stat-divider"></div>
           <div class="stat">
             <span class="stat-val">{{ store.maxGuesses }}</span>
-            <span class="stat-label">Max Guesses</span>
+            <span class="stat-label">Max allowed</span>
           </div>
         </div>
 
         <template v-if="store.gameMode === 'daily'">
           <div class="daily-actions">
-            <!-- Share options row -->
             <div class="share-row">
-              <button class="btn-action action-save" @click="saveResult" :disabled="isSharing">
-                <span v-if="isSharing">Wait...</span>
-                <span v-else>Save</span>
+              <button class="btn-outlined" @click="store.showStats = true">
+                📊 Stats
               </button>
-              <button class="btn-action action-share" @click="shareResult" :disabled="isSharing" v-if="canShare">
-                <span v-if="isSharing">Wait...</span>
-                <span v-else>Share</span>
+              <button class="btn-outlined" @click="saveResult" :disabled="isSharing">
+                {{ isSharing ? 'Wait…' : 'Save' }}
+              </button>
+              <button class="btn-filled" @click="shareResult" :disabled="isSharing" v-if="canShare">
+                {{ isSharing ? 'Wait…' : 'Share' }}
               </button>
             </div>
 
-            <p class="next-info">🕐 New servant available tomorrow!</p>
+            <p class="next-info">New servant available tomorrow</p>
 
-            <div class="switch-mode-box">
-               <button class="btn-switch-mode" @click="store.startNewGame('unlimited')">Switch to Unlimited Mode ↻</button>
-            </div>
+            <button class="btn-text-muted" @click="store.startNewGame('unlimited')">Switch to Unlimited mode</button>
           </div>
         </template>
         <template v-else>
-          <button class="btn-play-again" @click="store.playAgain()">Play Again ↻</button>
+          <div class="unlimited-actions">
+            <button class="btn-outlined" @click="store.showStats = true">📊 Stats</button>
+            <button class="btn-filled" @click="store.playAgain()">Play Again</button>
+          </div>
         </template>
       </div>
     </div>
@@ -117,7 +118,6 @@ import QrcodeVue from 'qrcode.vue'
 
 const store = useServantStore()
 
-// References & sharing state
 const shareRef = ref<HTMLElement | null>(null)
 const isSharing = ref(false)
 const BASE_URL = import.meta.env.BASE_URL
@@ -147,7 +147,7 @@ async function generateCanvas() {
   try {
     const canvas = await html2canvas(shareRef.value, {
       useCORS: true,
-      backgroundColor: '#0a0a12',
+      backgroundColor: '#131318',
       scale: 2,
       logging: false
     })
@@ -197,8 +197,8 @@ function downloadImage(dataUrl: string) {
 .result-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(5, 5, 15, 0.85);
-  backdrop-filter: blur(8px);
+  background: rgba(10, 10, 18, 0.75);
+  backdrop-filter: blur(6px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -207,86 +207,81 @@ function downloadImage(dataUrl: string) {
 }
 
 .result-card {
-  background: var(--bg-card);
+  background: var(--surface-2, #26263a);
   border-radius: var(--radius-lg);
-  padding: 2.5rem 2rem;
-  max-width: 420px;
+  padding: 2rem 1.75rem;
+  max-width: 400px;
   width: 100%;
   text-align: center;
-  border: 1px solid var(--border);
-  box-shadow: var(--shadow-card);
-  animation: popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  border: 1px solid var(--border-medium);
+  box-shadow: var(--shadow-3);
+  animation: popIn 0.4s cubic-bezier(0.34, 1.4, 0.64, 1);
 }
 
 .card-win {
-  border-color: var(--gold);
-  box-shadow: var(--shadow-gold), var(--shadow-card);
+  border-top: 2px solid var(--primary);
 }
 
 .card-lose {
-  border-color: var(--red);
+  border-top: 2px solid var(--danger, #9b3636);
 }
 
 .tenor-gif {
-  width: 140px;
+  width: 130px;
   max-width: 100%;
-  margin: 0 auto 0.5rem;
+  margin: 0 auto 0.75rem;
   border-radius: var(--radius-sm);
   display: block;
 }
 
-.win-gif { aspect-ratio: 1; height: 140px; }
-.lose-gif { aspect-ratio: 0.984; height: 142px; }
+.win-gif  { aspect-ratio: 1; height: 130px; }
+.lose-gif { aspect-ratio: 0.984; height: 132px; }
 
 .result-title {
   font-family: var(--font-title);
-  font-size: 1.8rem;
+  font-size: 1.65rem;
   font-weight: 700;
-  letter-spacing: 2px;
-  margin-bottom: 0.3rem;
+  letter-spacing: 1px;
+  margin-bottom: 0.2rem;
 }
 
-.win-title { color: var(--gold); }
+.win-title  { color: var(--primary); }
 .lose-title { color: var(--text-secondary); }
 
 .result-subtitle {
-  color: var(--text-secondary);
-  font-size: 0.9rem;
-  margin-bottom: 1.5rem;
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  margin-bottom: 1.25rem;
 }
 
 /* Answer card */
 .answer-card {
   display: flex;
   align-items: center;
-  gap: 14px;
-  background: var(--bg-secondary);
-  border: 1px solid var(--border);
+  gap: 12px;
+  background: var(--surface-1);
+  border: 1px solid var(--divider);
   border-radius: var(--radius-md);
-  padding: 14px;
-  margin-bottom: 1.5rem;
+  padding: 12px 14px;
+  margin-bottom: 1.25rem;
   text-align: left;
 }
 
 .answer-face {
-  width: 64px;
-  height: 64px;
-  border-radius: 50%;
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-sm);
   object-fit: cover;
-  border: 2px solid var(--gold);
   flex-shrink: 0;
 }
 
-.answer-info {
-  flex: 1;
-}
+.answer-info { flex: 1; }
 
 .answer-name {
-  font-size: 1.05rem;
+  font-size: 1rem;
   font-weight: 600;
   color: var(--text-primary);
   margin-bottom: 6px;
-  font-family: var(--font-title);
 }
 
 .answer-tags {
@@ -296,23 +291,18 @@ function downloadImage(dataUrl: string) {
 }
 
 .tag {
-  font-size: 0.7rem;
+  font-size: 0.68rem;
   padding: 2px 8px;
-  border-radius: 20px;
-  background: var(--wrong);
-  color: var(--text-secondary);
-  border: 1px solid var(--wrong-border);
+  border-radius: var(--radius-xs);
+  background: var(--surface-3);
+  color: var(--text-muted);
 }
 
-.rarity-tag {
-  color: var(--gold);
-  border-color: rgba(201,168,76,0.4);
-}
+.rarity-tag { color: var(--primary); }
 
-/* NP Card colors */
-.np-buster { background: rgba(220, 53, 69, 0.2); color: #ff5252; border-color: rgba(255, 82, 82, 0.4); }
-.np-arts   { background: rgba(13, 110, 253, 0.2); color: #64b5f6; border-color: rgba(100, 181, 246, 0.4); }
-.np-quick  { background: rgba(25, 135, 84, 0.2); color: #81c784; border-color: rgba(129, 199, 132, 0.4); }
+.np-buster { background: rgba(220,53,69,.15); color: #e87676; }
+.np-arts   { background: rgba(70,130,220,.15); color: #82b8f5; }
+.np-quick  { background: rgba(60,160,80,.15); color: #82c896; }
 
 /* Stats */
 .result-stats {
@@ -322,152 +312,129 @@ function downloadImage(dataUrl: string) {
   gap: 2rem;
   margin-bottom: 1.25rem;
   padding: 1rem 0;
-  border-top: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
+  border-top: 1px solid var(--divider);
+  border-bottom: 1px solid var(--divider);
 }
 
 .stat {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
+  gap: 3px;
 }
 
 .stat-val {
   font-family: var(--font-title);
-  font-size: 2rem;
+  font-size: 1.8rem;
   font-weight: 700;
-  color: var(--gold);
+  color: var(--primary);
   line-height: 1;
 }
 
 .stat-label {
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
+  letter-spacing: 0;
 }
 
 .stat-divider {
   width: 1px;
-  height: 40px;
-  background: var(--border);
+  height: 36px;
+  background: var(--divider);
 }
 
 .daily-actions {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
-  width: 100%;
-}
-
-.share-row {
-  display: flex;
   gap: 10px;
   width: 100%;
 }
 
-.btn-action {
+.unlimited-actions {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+  margin-top: 0.25rem;
+}
+
+.share-row {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+}
+
+/* M3-style buttons */
+.btn-filled {
   flex: 1;
   padding: 10px 16px;
+  background: var(--primary);
+  color: var(--on-primary);
   border: none;
-  border-radius: var(--radius-md);
-  font-family: var(--font-title);
-  font-weight: 700;
-  font-size: 0.9rem;
+  border-radius: var(--radius-xl);
+  font-weight: 600;
+  font-size: 0.875rem;
   cursor: pointer;
-  letter-spacing: 0.5px;
-  transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  transition: opacity 0.15s;
 }
 
-.action-save {
-  background: var(--bg-secondary);
+.btn-filled:hover:not(:disabled) { opacity: 0.88; }
+.btn-filled:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.btn-outlined {
+  flex: 1;
+  padding: 10px 16px;
+  background: transparent;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-xl);
+  font-weight: 500;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.btn-outlined:hover:not(:disabled) {
+  background: var(--surface-3);
   color: var(--text-primary);
-  border: 1px solid var(--border);
 }
 
-.action-save:hover:not(:disabled) {
-  border-color: var(--gold);
-  color: var(--gold);
+.btn-outlined:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.btn-text-muted {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  cursor: pointer;
+  padding: 4px 8px;
+  transition: color 0.15s;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: transparent;
 }
 
-.action-share {
-  background: var(--gold);
-  color: #1a1000;
-}
-
-.action-share:hover:not(:disabled) {
-  background: var(--gold-light);
-  box-shadow: 0 0 12px rgba(201, 168, 76, 0.4);
-}
-
-.btn-action:disabled {
-  opacity: 0.7;
-  cursor: not-allowed;
+.btn-text-muted:hover {
+  color: var(--text-secondary);
+  text-decoration-color: var(--text-muted);
 }
 
 .next-info {
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   color: var(--text-muted);
 }
 
-.switch-mode-box {
-  margin-top: 0.5rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--border);
-  width: 100%;
-}
-
-.btn-switch-mode {
-  width: 100%;
-  padding: 10px;
-  background: transparent;
-  color: var(--gold);
-  border: 1px dashed var(--gold);
-  border-radius: var(--radius-sm);
-  font-family: var(--font-title);
-  font-size: 0.85rem;
-  cursor: pointer;
-  letter-spacing: 1px;
-  transition: all 0.2s;
-  text-transform: uppercase;
-}
-
-.btn-switch-mode:hover {
-  background: rgba(201, 168, 76, 0.1);
-}
-
-
 .btn-play-again {
-  padding: 10px 24px;
-  background: var(--gold);
-  color: #1a1000;
-  border: none;
-  border-radius: var(--radius-md);
-  font-family: var(--font-title);
-  font-weight: 700;
-  font-size: 0.9rem;
-  cursor: pointer;
-  letter-spacing: 1px;
-  transition: all 0.2s ease;
-  margin-top: 0.5rem;
-}
-
-.btn-play-again:hover {
-  background: var(--gold-light);
-  box-shadow: var(--shadow-gold);
+  width: 100%;
+  margin-top: 0.25rem;
 }
 
 /* Transition */
-.result-popup-enter-active { animation: popIn 0.4s ease; }
-.result-popup-leave-active { transition: opacity 0.2s ease; }
-.result-popup-leave-to { opacity: 0; }
+.result-popup-enter-active { animation: popIn 0.35s ease; }
+.result-popup-leave-active { transition: opacity 0.18s ease; }
+.result-popup-leave-to    { opacity: 0; }
 
-/* Hidden Share Template Styles */
+/* Hidden Share Template */
 .share-export-container {
   position: absolute;
   top: -9999px;
@@ -476,12 +443,12 @@ function downloadImage(dataUrl: string) {
 }
 
 .share-card-layout {
-  background: #0a0a12;
-  border: 2px solid var(--border);
-  border-radius: var(--radius-lg);
+  background: #131318;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 16px;
   padding: 2.5rem;
   width: 500px;
-  color: #e0e0e0;
+  color: #e5e0d8;
 }
 
 .share-header {
@@ -490,30 +457,22 @@ function downloadImage(dataUrl: string) {
   gap: 1rem;
   margin-bottom: 2rem;
   padding-bottom: 1rem;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
 }
 
-.share-logo {
-  width: 48px;
-  height: 48px;
-}
+.share-logo { width: 44px; height: 44px; }
 
 .share-title-box h1 {
   font-family: var(--font-title);
-  font-size: 2.2rem;
+  font-size: 2rem;
   color: #ffffff;
   margin: 0;
-  letter-spacing: 2px;
+  letter-spacing: 1px;
 }
 
-.share-title-box .accent {
-  color: var(--gold);
-}
+.share-title-box .accent { color: var(--primary); }
 
-.share-date {
-  font-size: 0.9rem;
-  color: var(--text-muted);
-}
+.share-date { font-size: 0.85rem; color: #5e5e72; }
 
 .share-result-area {
   text-align: center;
@@ -522,20 +481,20 @@ function downloadImage(dataUrl: string) {
 
 .win-text {
   font-family: var(--font-title);
-  color: var(--gold);
-  font-size: 2rem;
+  color: var(--primary);
+  font-size: 1.8rem;
 }
 
 .lose-text {
   font-family: var(--font-title);
-  color: var(--red);
-  font-size: 2rem;
+  color: #9b3636;
+  font-size: 1.8rem;
 }
 
 .share-tries {
-  font-size: 1.1rem;
+  font-size: 1rem;
   margin-top: 0.5rem;
-  color: var(--text-secondary);
+  color: #9e9aaa;
 }
 
 .share-footer {
@@ -543,25 +502,13 @@ function downloadImage(dataUrl: string) {
   align-items: center;
   justify-content: center;
   gap: 1.5rem;
-  background: var(--bg-card);
+  background: #1e1e26;
   padding: 1.25rem;
-  border-radius: var(--radius-md);
+  border-radius: 12px;
 }
 
-.share-qr {
-  border: 4px solid #fff;
-  border-radius: 4px;
-}
+.share-qr { border: 3px solid #fff; border-radius: 4px; }
 
-.share-meta p {
-  color: var(--gold);
-  font-weight: 600;
-  font-size: 1rem;
-  margin-bottom: 0.2rem;
-}
-
-.share-meta span {
-  color: var(--text-muted);
-  font-size: 0.85rem;
-}
+.share-meta p { color: var(--primary); font-weight: 600; font-size: 0.95rem; margin-bottom: 0.2rem; }
+.share-meta span { color: #5e5e72; font-size: 0.82rem; }
 </style>

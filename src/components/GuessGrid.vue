@@ -104,7 +104,6 @@ import type { GuessResult, HintableColumn } from '../types/servant'
 const store = useServantStore()
 const maxVisualRows = computed(() => store.maxGuesses)
 
-// Column definitions in display order
 const columnDefs = [
   { key: 'className'  },
   { key: 'rarity'    },
@@ -198,7 +197,7 @@ function resultClass(result: GuessResult) {
   return {
     'cell-correct': result === 'correct',
     'cell-partial': result === 'partial',
-    'cell-wrong': result === 'wrong',
+    'cell-wrong':   result === 'wrong',
   }
 }
 
@@ -226,10 +225,10 @@ function getAnswerText(key: string): string {
   if (!a) return ''
   const map: Record<string, string> = {
     className: a.className,
-    rarity: String(a.rarity),
-    gender: a.gender,
-    npCard: a.npCard,
-    npTarget: a.npTarget,
+    rarity:    String(a.rarity),
+    gender:    a.gender,
+    npCard:    a.npCard,
+    npTarget:  a.npTarget,
     attribute: a.attribute,
     alignment: a.alignment,
   }
@@ -241,10 +240,10 @@ function getAnswerCellAttrs(key: string) {
   if (!a) return {}
   const map: Record<string, string> = {
     className: a.className,
-    rarity: String(a.rarity),
-    gender: a.gender,
-    npCard: a.npCard,
-    npTarget: a.npTarget,
+    rarity:    String(a.rarity),
+    gender:    a.gender,
+    npCard:    a.npCard,
+    npTarget:  a.npTarget,
     attribute: a.attribute,
     alignment: a.alignment,
   }
@@ -253,22 +252,22 @@ function getAnswerCellAttrs(key: string) {
 
 function getBadgeAttrs(key: string, val: string): Record<string, string> {
   if (key === 'className') return { class: `class-badge np-${val}` }
-  if (key === 'npCard') return { class: `np-badge np-${val}` }
+  if (key === 'npCard')    return { class: `np-badge np-${val}` }
   if (key === 'attribute') return { class: `attr-badge attr-${val}` }
-  if (key === 'rarity') return { class: 'rarity-stars' }
-  if (key === 'gender') return { class: 'gender-icon' }
-  if (key === 'npTarget') return { class: 'np-tar-text' }
+  if (key === 'rarity')    return { class: 'rarity-stars' }
+  if (key === 'gender')    return { class: 'gender-icon' }
+  if (key === 'npTarget')  return { class: 'np-tar-text' }
   if (key === 'alignment') return { class: 'align-text' }
   return {}
 }
 
 function formatValue(key: string, val: string): string {
-  if (key === 'rarity') return '★'.repeat(Number(val))
+  if (key === 'rarity')    return '★'.repeat(Number(val))
   if (key === 'className') return formatClass(val)
   if (key === 'attribute') return formatAttr(val)
-  if (key === 'gender') return formatGender(val)
-  if (key === 'npCard') return val.charAt(0).toUpperCase() + val.slice(1)
-  if (key === 'npTarget') return ({ aoe: 'AoE', single: 'Single', support: 'Support' } as any)[val] ?? val
+  if (key === 'gender')    return formatGender(val)
+  if (key === 'npCard')    return val.charAt(0).toUpperCase() + val.slice(1)
+  if (key === 'npTarget')  return ({ aoe: 'AoE', single: 'Single', support: 'Support' } as any)[val] ?? val
   return val
 }
 
@@ -296,30 +295,30 @@ function formatGender(g: string): string {
 .grid-row {
   display: grid;
   grid-template-columns: 220px repeat(7, 1fr);
-  gap: 6px;
-  margin-bottom: 6px;
+  gap: 5px;
+  margin-bottom: 5px;
   min-width: 860px;
 }
 
 /* Header */
 .header-row .cell {
-  background: var(--bg-secondary);
-  border: 1px solid var(--border);
-  color: var(--gold);
-  font-family: var(--font-title);
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--divider);
+  color: var(--text-muted);
   font-size: 0.65rem;
   font-weight: 600;
-  letter-spacing: 1.5px;
+  letter-spacing: 0.5px;
   text-transform: uppercase;
-  padding: 8px 10px;
-  border-radius: var(--radius-sm);
+  padding: 6px 10px 8px;
+  border-radius: 0;
   text-align: center;
 }
 
 /* Base cell */
 .cell {
-  background: var(--bg-card);
-  border: 1px solid var(--wrong-border);
+  background: var(--surface-1);
+  border: 1px solid var(--border-subtle);
   border-radius: var(--radius-sm);
   padding: 10px 8px;
   display: flex;
@@ -329,35 +328,44 @@ function formatGender(g: string): string {
   gap: 4px;
   font-size: 0.78rem;
   text-align: center;
-  min-height: 72px;
-  transition: background 0.3s ease, border-color 0.3s ease;
+  min-height: 70px;
+  transition: background 0.25s, border-color 0.25s;
 }
 
 /* Result colors */
-.cell-correct { background: var(--correct-bg); border-color: var(--correct-border); box-shadow: 0 0 10px rgba(67,160,71,0.2); }
-.cell-partial  { background: var(--partial-bg); border-color: var(--partial-border); box-shadow: 0 0 10px rgba(251,140,0,0.2); }
-.cell-wrong    { background: var(--wrong); border-color: var(--wrong-border); }
+.cell-correct {
+  background: var(--correct-bg);
+  border-color: var(--correct-border);
+}
+.cell-partial {
+  background: var(--partial-bg);
+  border-color: var(--partial-border);
+}
+.cell-wrong {
+  background: var(--wrong-bg);
+  border-color: var(--wrong-border);
+}
 
 /* Flip animation */
 .cell.flip {
-  animation: flipReveal 0.7s ease var(--flip-delay, 0ms) both;
+  animation: flipReveal 0.65s ease var(--flip-delay, 0ms) both;
 }
 
 @keyframes flipReveal {
   0%   { transform: rotateX(0deg); }
-  40%  { transform: rotateX(-90deg); opacity: 0.4; }
-  60%  { transform: rotateX(-90deg); opacity: 0.4; }
+  40%  { transform: rotateX(-90deg); opacity: 0.3; }
+  60%  { transform: rotateX(-90deg); opacity: 0.3; }
   100% { transform: rotateX(0deg); }
 }
 
 .result-icon {
-  font-size: 0.65rem;
+  font-size: 0.6rem;
   font-weight: 700;
-  opacity: 0.7;
+  opacity: 0.6;
 }
-.cell-correct .result-icon { color: var(--correct-border); }
-.cell-partial .result-icon { color: var(--partial-border); }
-.cell-wrong .result-icon   { color: var(--text-muted); }
+.cell-correct .result-icon { color: var(--correct-text); }
+.cell-partial .result-icon { color: var(--partial-text); }
+.cell-wrong   .result-icon { color: var(--wrong-text); }
 
 /* Servant cell */
 .cell-servant {
@@ -369,19 +377,17 @@ function formatGender(g: string): string {
 }
 
 .servant-face {
-  width: 44px; height: 44px;
-  border-radius: 50%;
+  width: 42px; height: 42px;
+  border-radius: var(--radius-sm);
   object-fit: cover;
-  border: 2px solid var(--border);
-  background: var(--wrong);
+  background: var(--surface-3);
   flex-shrink: 0;
 }
 
 .servant-face-placeholder {
-  width: 44px; height: 44px;
-  border-radius: 50%;
-  background: var(--wrong);
-  border: 2px solid var(--wrong-border);
+  width: 42px; height: 42px;
+  border-radius: var(--radius-sm);
+  background: var(--surface-3);
   flex-shrink: 0;
 }
 
@@ -393,58 +399,54 @@ function formatGender(g: string): string {
 }
 
 .placeholder-text, .placeholder-dash { color: var(--text-muted); font-size: 0.8rem; }
-.hint-arrow { color: var(--partial-border); font-size: 0.8rem; font-weight: 700; }
+.hint-arrow { color: var(--partial-text); font-size: 0.75rem; font-weight: 600; }
 
 /* Badges */
-.class-badge  { font-size: 0.7rem; padding: 3px 8px; border-radius: 20px; font-weight: 500; }
-.rarity-stars { color: var(--gold); font-size: 0.75rem; letter-spacing: -1px; }
-.attr-badge   { font-size: 0.72rem; font-weight: 500; white-space: nowrap; }
-.gender-icon  { font-size: 0.78rem; }
-.align-text   { font-size: 0.7rem; text-align: center; color: var(--text-secondary); line-height: 1.3; }
-.np-tar-text  { font-size: 0.72rem; font-weight: 600; color: var(--text-primary); }
-.np-badge { font-size: 0.72rem; font-weight: 500; padding: 3px 8px; border-radius: 4px; }
+.class-badge  { font-size: 0.68rem; padding: 2px 7px; border-radius: var(--radius-xs); font-weight: 500; }
+.rarity-stars { color: var(--primary); font-size: 0.72rem; letter-spacing: -1px; }
+.attr-badge   { font-size: 0.7rem; font-weight: 500; white-space: nowrap; }
+.gender-icon  { font-size: 0.76rem; }
+.align-text   { font-size: 0.68rem; text-align: center; color: var(--text-secondary); line-height: 1.3; }
+.np-tar-text  { font-size: 0.7rem; font-weight: 600; color: var(--text-primary); }
+.np-badge     { font-size: 0.7rem; font-weight: 500; padding: 2px 7px; border-radius: var(--radius-xs); }
 
-.attr-sky   { color: #64b5f6; }
-.attr-earth { color: #a5d6a7; }
-.attr-human { color: #ce93d8; }
-.attr-star  { color: var(--gold); }
-.attr-beast { color: #ef9a9a; }
+.attr-sky   { color: #82b8f5; }
+.attr-earth { color: #86c897; }
+.attr-human { color: #c5a0d5; }
+.attr-star  { color: var(--primary); }
+.attr-beast { color: #e07070; }
 
-.np-buster { background: rgba(220,53,69,.2); color: #ff5252; border: 1px solid rgba(255,82,82,.4); }
-.np-arts   { background: rgba(13,110,253,.2); color: #64b5f6; border: 1px solid rgba(100,181,246,.4); }
-.np-quick  { background: rgba(25,135,84,.2);  color: #81c784; border: 1px solid rgba(129,199,132,.4); }
+.np-buster { background: rgba(220,53,69,.15); color: #e87676; }
+.np-arts   { background: rgba(70,130,220,.15); color: #82b8f5; }
+.np-quick  { background: rgba(60,160,80,.15);  color: #82c896; }
 
-/* Row locked (unlimited hard mode: beyond maxGuesses cap) */
+/* Row over limit */
 .row-over-limit {
   opacity: 0.2;
   pointer-events: none;
   filter: grayscale(1);
 }
 
-/* ========== HINT ROWS ==========*/
-.hint-row {
-  margin-bottom: 6px;
-}
+/* ========== HINT ROWS ========== */
+.hint-row { margin-bottom: 5px; }
 
-/* Locked: greyed out, cannot interact */
 .hint-row-locked {
-  opacity: 0.38;
-  filter: grayscale(0.8);
+  opacity: 0.3;
+  filter: grayscale(0.7);
 }
 
-/* Active: user has reached this row, can reveal */
 .hint-row-active {
   opacity: 1;
-  animation: hintPulse 1.8s ease-in-out 2;
+  /* subtle fade-in pulse once — not looping */
+  animation: hintAppear 0.4s ease;
 }
 
-@keyframes hintPulse {
-  0%, 100% { filter: drop-shadow(0 0 0px transparent); }
-  50%       { filter: drop-shadow(0 0 8px rgba(201,168,76,0.45)); }
+@keyframes hintAppear {
+  from { opacity: 0.4; }
+  to   { opacity: 1; }
 }
 
-/* Used: hint was clicked but row not guessed yet */
-.hint-row-used { opacity: 0.75; }
+.hint-row-used { opacity: 0.65; }
 
 /* Label cell in hint row */
 .hint-label-cell {
@@ -452,21 +454,21 @@ function formatGender(g: string): string {
   justify-content: flex-start !important;
   align-items: center !important;
   gap: 10px;
-  background: rgba(201, 168, 76, 0.04);
-  border: 1px dashed rgba(201, 168, 76, 0.3) !important;
+  background: rgba(200, 168, 90, 0.05);
+  border: 1px solid rgba(200, 168, 90, 0.2) !important;
 }
 
 .hint-label-text { display: flex; flex-direction: column; gap: 2px; }
 
-.hint-row-icon { font-size: 1.3rem; line-height: 1; }
-.hint-row-title  { font-family: var(--font-title); font-size: 0.7rem; font-weight: 700; color: var(--gold); letter-spacing: 1px; }
+.hint-row-icon   { font-size: 1.2rem; line-height: 1; }
+.hint-row-title  { font-size: 0.68rem; font-weight: 600; color: var(--primary); }
 .hint-row-sub    { font-size: 0.58rem; color: var(--text-muted); }
 
-/* Normal hint cell (locked dim dot) */
+/* Normal hint cell */
 .hint-cell {
   cursor: default;
-  border: 1px dashed rgba(255, 255, 255, 0.1);
-  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border-subtle);
+  background: transparent;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -475,57 +477,54 @@ function formatGender(g: string): string {
 }
 
 .hint-dot {
-  width: 6px; height: 6px;
+  width: 5px; height: 5px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.18);
+  background: var(--border-medium);
 }
 
 /* Clickable when active */
 .hint-cell.hint-clickable {
   cursor: pointer;
-  background: rgba(201, 168, 76, 0.06);
-  border: 1px dashed rgba(201, 168, 76, 0.45);
-  transition: all 0.2s ease;
+  background: rgba(200, 168, 90, 0.05);
+  border: 1px solid rgba(200, 168, 90, 0.3);
+  transition: all 0.15s;
 }
 .hint-cell.hint-clickable .hint-dot {
-  background: rgba(201, 168, 76, 0.5);
-  box-shadow: 0 0 4px rgba(201, 168, 76, 0.4);
+  background: rgba(200, 168, 90, 0.5);
 }
 .hint-cell.hint-clickable:hover {
-  background: rgba(201, 168, 76, 0.14);
-  border-color: var(--gold);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(201, 168, 76, 0.2);
+  background: rgba(200, 168, 90, 0.12);
+  border-color: var(--primary-dim);
+  transform: translateY(-1px);
 }
 
 /* Revealed */
 .hint-cell.hint-revealed {
-  background: rgba(67, 160, 71, 0.1);
+  background: var(--correct-bg);
   border: 1px solid var(--correct-border);
   cursor: default;
-  animation: revealPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  animation: revealPop 0.35s cubic-bezier(0.34, 1.4, 0.64, 1);
 }
 @keyframes revealPop {
-  from { transform: scale(0.85); opacity: 0; }
+  from { transform: scale(0.88); opacity: 0; }
   to   { transform: scale(1); opacity: 1; }
 }
 
-/* Other cells when one is already revealed (max reached) */
 .hint-cell.hint-spent {
-  opacity: 0.25;
+  opacity: 0.2;
   cursor: not-allowed;
 }
 
-.hint-check { font-size: 0.65rem; color: var(--correct-border); font-weight: 700; }
+.hint-check { font-size: 0.6rem; color: var(--correct-text); font-weight: 700; }
 
 /* Mobile */
 @media (max-width: 768px) {
   .grid-row {
-    grid-template-columns: 130px repeat(7, minmax(64px, 1fr));
-    min-width: 630px;
+    grid-template-columns: 120px repeat(7, minmax(60px, 1fr));
+    min-width: 610px;
   }
-  .header-row .cell { font-size: 0.55rem; padding: 6px 4px; }
-  .cell { padding: 6px 4px; font-size: 0.72rem; }
+  .header-row .cell { font-size: 0.55rem; padding: 5px 4px 7px; }
+  .cell { padding: 6px 4px; font-size: 0.7rem; min-height: 62px; }
   .cell-servant {
     flex-direction: column !important;
     align-items: center !important;
@@ -533,7 +532,7 @@ function formatGender(g: string): string {
     text-align: center !important;
   }
   .hint-label-cell { flex-direction: column !important; align-items: center !important; }
-  .servant-name { font-size: 0.65rem; }
+  .servant-name { font-size: 0.62rem; }
   .hint-row-sub { display: none; }
 }
 </style>

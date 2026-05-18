@@ -3,13 +3,13 @@
     <!-- Loading -->
     <div v-if="store.loading" class="loading-state">
       <div class="loading-spinner"></div>
-      <p class="loading-text">Summoning servant data...</p>
+      <p class="loading-text">Summoning servant data…</p>
       <p class="loading-sub">Connecting to Chaldea database</p>
     </div>
 
     <!-- Error -->
     <div v-else-if="store.error" class="error-state">
-      <div class="error-icon">⚠️</div>
+      <div class="error-icon">⚠</div>
       <h3>Connection Failed</h3>
       <p>{{ store.error }}</p>
       <button class="btn-retry" @click="store.fetchServants()">Retry</button>
@@ -21,25 +21,25 @@
       <section class="hero">
         <div class="hero-content">
           <h1 class="hero-title">
-            <span class="hero-grail">🔍</span>
             FGO<span class="accent">dle</span>
           </h1>
           <p class="hero-subtitle">Guess today's Fate/Grand Order servant</p>
 
-          <div class="mode-toggle">
+          <!-- Mode toggle — M3 Segmented Button -->
+          <div class="mode-toggle" role="group" aria-label="Game mode">
             <button
               class="mode-btn"
               :class="{ active: store.gameMode === 'daily' }"
               @click="store.startNewGame('daily')"
             >
-              Daily
+              <span class="mode-icon">📅</span> Daily
             </button>
             <button
               class="mode-btn"
               :class="{ active: store.gameMode === 'unlimited' }"
               @click="store.startNewGame('unlimited')"
             >
-              Unlimited
+              <span class="mode-icon">♾</span> Unlimited
             </button>
           </div>
 
@@ -47,23 +47,24 @@
           <Transition name="fade-slide">
             <div v-if="store.gameMode === 'unlimited'" class="difficulty-row">
               <button
-                class="diff-btn diff-easy"
-                :class="{ active: store.difficulty === 'easy' }"
+                class="diff-chip"
+                :class="{ active: store.difficulty === 'easy', 'diff-easy': store.difficulty === 'easy' }"
                 @click="store.setDifficulty('easy')"
-              >Easy (12)</button>
+              >Easy · 12</button>
               <button
-                class="diff-btn diff-normal"
-                :class="{ active: store.difficulty === 'normal' }"
+                class="diff-chip"
+                :class="{ active: store.difficulty === 'normal', 'diff-normal': store.difficulty === 'normal' }"
                 @click="store.setDifficulty('normal')"
-              >Normal (8)</button>
+              >Normal · 8</button>
               <button
-                class="diff-btn diff-hard"
-                :class="{ active: store.difficulty === 'hard' }"
+                class="diff-chip"
+                :class="{ active: store.difficulty === 'hard', 'diff-hard': store.difficulty === 'hard' }"
                 @click="store.setDifficulty('hard')"
-              >Hard (5)</button>
+              >Hard · 5</button>
             </div>
           </Transition>
 
+          <!-- Progress -->
           <div class="hero-progress">
             <div class="progress-track">
               <div
@@ -74,7 +75,10 @@
             </div>
             <span class="progress-label">
               {{ store.guesses.length }} / {{ store.maxGuesses }}
-              {{ store.gameOver ? (store.won ? '— Victory!' : '— Game Over') : 'guesses' }}
+              <template v-if="store.gameOver">
+                &mdash; {{ store.won ? 'Victory!' : 'Game Over' }}
+              </template>
+              <template v-else>guesses</template>
             </span>
           </div>
         </div>
@@ -83,23 +87,21 @@
       <!-- Search -->
       <section class="search-section">
         <SearchBar />
-        <p class="search-hint" v-if="!store.gameOver">
-          💡 Type a servant name to start guessing
-        </p>
+        <p class="search-hint" v-if="!store.gameOver">Type a servant name to guess</p>
       </section>
 
       <!-- Clue Legend -->
       <section class="legend">
         <div class="legend-item">
-          <span class="legend-dot dot-correct"></span>
+          <span class="legend-pip pip-correct"></span>
           <span>Correct</span>
         </div>
         <div class="legend-item">
-          <span class="legend-dot dot-partial"></span>
+          <span class="legend-pip pip-partial"></span>
           <span>Close (±1 rarity)</span>
         </div>
         <div class="legend-item">
-          <span class="legend-dot dot-wrong"></span>
+          <span class="legend-pip pip-wrong"></span>
           <span>Wrong</span>
         </div>
       </section>
@@ -139,10 +141,10 @@ const progressPct = computed(() => {
   max-width: 960px;
   margin: 0 auto;
   width: 100%;
-  padding: 2rem 1.25rem 4rem;
+  padding: 1.75rem 1.25rem 4rem;
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1.75rem;
 }
 
 /* Loading */
@@ -152,15 +154,15 @@ const progressPct = computed(() => {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 1rem;
+  gap: 0.75rem;
   padding: 6rem 0;
 }
 
 .loading-spinner {
-  width: 56px;
-  height: 56px;
-  border: 3px solid var(--border);
-  border-top-color: var(--gold);
+  width: 40px;
+  height: 40px;
+  border: 2.5px solid var(--border-medium);
+  border-top-color: var(--primary);
   border-radius: 50%;
   animation: spin 0.9s linear infinite;
 }
@@ -168,9 +170,9 @@ const progressPct = computed(() => {
 @keyframes spin { to { transform: rotate(360deg); } }
 
 .loading-text {
-  font-family: var(--font-title);
-  font-size: 1.1rem;
-  color: var(--gold);
+  font-size: 1rem;
+  color: var(--text-secondary);
+  font-weight: 500;
 }
 
 .loading-sub {
@@ -185,180 +187,167 @@ const progressPct = computed(() => {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 1rem;
+  gap: 0.75rem;
   padding: 4rem 0;
   text-align: center;
 }
 
-.error-icon { font-size: 3rem; }
+.error-icon { font-size: 2.5rem; color: var(--text-muted); }
 
 .error-state h3 {
-  font-family: var(--font-title);
+  font-size: 1.2rem;
   color: var(--text-primary);
-  font-size: 1.4rem;
+  font-weight: 600;
 }
 
 .error-state p {
   color: var(--text-secondary);
-  font-size: 0.9rem;
+  font-size: 0.875rem;
 }
 
 .btn-retry {
   margin-top: 0.5rem;
-  padding: 10px 24px;
-  background: var(--gold);
-  color: #1a1000;
+  padding: 9px 22px;
+  background: var(--primary);
+  color: var(--on-primary);
   border: none;
-  border-radius: var(--radius-md);
-  font-family: var(--font-title);
-  font-weight: 700;
-  font-size: 0.9rem;
+  border-radius: var(--radius-xl);
+  font-weight: 600;
+  font-size: 0.875rem;
   cursor: pointer;
-  letter-spacing: 1px;
-  transition: all 0.2s ease;
+  transition: opacity 0.15s;
 }
 
-.btn-retry:hover {
-  background: var(--gold-light);
-  box-shadow: var(--shadow-gold);
-}
+.btn-retry:hover { opacity: 0.88; }
 
 /* Hero */
 .hero {
   text-align: center;
-  padding: 1rem 0 0;
+  padding-top: 0.5rem;
 }
 
 .hero-title {
   font-family: var(--font-title);
-  font-size: clamp(2.5rem, 8vw, 4rem);
+  font-size: clamp(2.2rem, 7vw, 3.5rem);
   font-weight: 900;
-  letter-spacing: 4px;
   color: var(--text-primary);
   line-height: 1;
-  margin-bottom: 0.5rem;
-  text-shadow: 0 0 40px rgba(201, 168, 76, 0.2);
+  margin-bottom: 0.4rem;
+  letter-spacing: 2px;
 }
 
-.hero-grail {
-  color: var(--gold);
-  margin-right: 0.2em;
-  filter: drop-shadow(0 0 12px var(--gold-glow));
-}
-
-.accent { color: var(--gold); }
+.accent { color: var(--primary); }
 
 .hero-subtitle {
-  color: var(--text-secondary);
-  font-size: 1rem;
-  letter-spacing: 2px;
-  text-transform: uppercase;
+  color: var(--text-muted);
+  font-size: 0.9rem;
   margin-bottom: 1.5rem;
 }
 
-/* Mode toggle */
+/* Mode toggle — M3 Segmented Button */
 .mode-toggle {
   display: inline-flex;
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 4px;
+  background: var(--surface-1);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-xl);
+  padding: 3px;
   margin-bottom: 1rem;
+  gap: 2px;
 }
 
 .mode-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
   background: transparent;
   border: none;
-  color: var(--text-secondary);
-  padding: 6px 16px;
-  font-family: var(--font-title);
-  font-size: 0.8rem;
-  font-weight: 600;
-  letter-spacing: 1px;
-  border-radius: var(--radius-md);
+  color: var(--text-muted);
+  padding: 7px 18px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: var(--radius-xl);
   cursor: pointer;
-  transition: all 0.2s;
-  text-transform: uppercase;
+  transition: color 0.15s, background 0.15s;
+}
+
+.mode-icon {
+  font-size: 0.9em;
 }
 
 .mode-btn:hover {
   color: var(--text-primary);
+  background: var(--border-subtle);
 }
 
 .mode-btn.active {
-  background: var(--gold);
-  color: #1a1000;
-  box-shadow: var(--shadow-gold);
+  background: var(--primary-bg);
+  color: var(--primary);
 }
 
-/* Difficulty selector */
+/* Difficulty — M3 Filter Chips */
 .difficulty-row {
   display: flex;
   gap: 8px;
   justify-content: center;
   margin-bottom: 1.25rem;
+  flex-wrap: wrap;
 }
 
-.diff-btn {
-  padding: 5px 14px;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--border);
-  background: var(--bg-card);
+.diff-chip {
+  padding: 6px 14px;
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--border-medium);
+  background: transparent;
   color: var(--text-muted);
-  font-family: var(--font-title);
-  font-size: 0.72rem;
-  font-weight: 600;
+  font-size: 0.8rem;
+  font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s;
-  letter-spacing: 0.5px;
+  transition: all 0.15s;
 }
 
-.diff-easy.active  { background: rgba(67,160,71,0.15); color: #81c784; border-color: #43a047; }
-.diff-normal.active{ background: rgba(251,140,0,0.15); color: #ffb74d; border-color: #fb8c00; }
-.diff-hard.active  { background: rgba(198,40,40,0.15); color: #ef9a9a; border-color: #c62828; }
+.diff-chip:hover { border-color: var(--border-medium); color: var(--text-secondary); background: var(--border-subtle); }
 
-.diff-easy:hover  { border-color: #43a047; color: #81c784; }
-.diff-normal:hover{ border-color: #fb8c00; color: #ffb74d; }
-.diff-hard:hover  { border-color: #c62828; color: #ef9a9a; }
+.diff-chip.diff-easy.active   { background: rgba(74,143,86,.14); color: var(--correct-text); border-color: var(--correct-border); }
+.diff-chip.diff-normal.active { background: rgba(160,113,42,.14); color: var(--partial-text); border-color: var(--partial-border); }
+.diff-chip.diff-hard.active   { background: rgba(155,54,54,.14); color: #e09090; border-color: #9b5050; }
 
-/* Fade-slide transition for difficulty row */
-.fade-slide-enter-active { transition: all 0.3s ease; }
-.fade-slide-leave-active { transition: all 0.2s ease; }
-.fade-slide-enter-from { opacity: 0; transform: translateY(-8px); }
-.fade-slide-leave-to   { opacity: 0; transform: translateY(-8px); }
+/* Fade-slide transition */
+.fade-slide-enter-active { transition: all 0.25s ease; }
+.fade-slide-leave-active { transition: all 0.18s ease; }
+.fade-slide-enter-from   { opacity: 0; transform: translateY(-6px); }
+.fade-slide-leave-to     { opacity: 0; transform: translateY(-6px); }
 
 /* Progress */
 .hero-progress {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
-  max-width: 320px;
+  gap: 6px;
+  max-width: 300px;
   margin: 0 auto;
 }
 
 .progress-track {
   width: 100%;
-  height: 4px;
-  background: var(--border);
+  height: 3px;
+  background: var(--border-medium);
   border-radius: 2px;
   overflow: hidden;
 }
 
 .progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, var(--gold), var(--gold-light));
+  background: var(--primary);
   border-radius: 2px;
   transition: width 0.5s ease;
 }
 
-.fill-win { background: linear-gradient(90deg, #2e7d32, #66bb6a); }
-.fill-lose { background: linear-gradient(90deg, #7f0000, #b71c1c); }
+.fill-win  { background: var(--correct-border); }
+.fill-lose { background: #7a3030; }
 
 .progress-label {
   font-size: 0.75rem;
   color: var(--text-muted);
-  letter-spacing: 1px;
 }
 
 /* Search section */
@@ -366,11 +355,11 @@ const progressPct = computed(() => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.6rem;
+  gap: 0.5rem;
 }
 
 .search-hint {
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   color: var(--text-muted);
 }
 
@@ -379,31 +368,28 @@ const progressPct = computed(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 1.5rem;
+  gap: 1.25rem;
   flex-wrap: wrap;
 }
 
 .legend-item {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 7px;
   font-size: 0.78rem;
   color: var(--text-secondary);
 }
 
-.legend-dot {
-  width: 12px;
-  height: 12px;
-  border-radius: 3px;
-  border: 1px solid transparent;
+.legend-pip {
+  width: 10px;
+  height: 10px;
+  border-radius: var(--radius-xs);
 }
 
-.dot-correct { background: var(--correct-bg); border-color: var(--correct-border); }
-.dot-partial { background: var(--partial-bg); border-color: var(--partial-border); }
-.dot-wrong   { background: var(--wrong); border-color: var(--wrong-border); }
+.pip-correct { background: var(--correct-border); opacity: 0.75; }
+.pip-partial { background: var(--partial-border); opacity: 0.75; }
+.pip-wrong   { background: var(--wrong-border); }
 
 /* Grid section */
-.grid-section {
-  width: 100%;
-}
+.grid-section { width: 100%; }
 </style>
