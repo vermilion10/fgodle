@@ -58,10 +58,10 @@
     <!-- Mobile Dropdown -->
     <div class="mobile-menu" v-if="isMobileMenuOpen">
       <router-link to="/" custom v-slot="{ navigate, isExactActive }">
-        <button class="mobile-nav-btn" :class="{ 'mobile-nav-btn-active': isExactActive }" @click="navigate; isMobileMenuOpen = false">Game</button>
+        <button class="mobile-nav-btn" :class="{ 'mobile-nav-btn-active': isExactActive }" @click="navigate($event); isMobileMenuOpen = false">Game</button>
       </router-link>
       <router-link to="/archive" custom v-slot="{ navigate, isExactActive }">
-        <button class="mobile-nav-btn" :class="{ 'mobile-nav-btn-active': isExactActive }" @click="navigate; isMobileMenuOpen = false">Archive</button>
+        <button class="mobile-nav-btn" :class="{ 'mobile-nav-btn-active': isExactActive }" @click="navigate($event); isMobileMenuOpen = false">Archive</button>
       </router-link>
       <button class="mobile-nav-btn" @click="store.showAbout = true; isMobileMenuOpen = false">About</button>
       <button class="mobile-nav-btn mobile-nav-btn-filled" @click="store.showHowToPlay = true; isMobileMenuOpen = false">How to Play</button>
@@ -204,17 +204,34 @@ const isMobileMenuOpen = ref(false)
   .nav-btn {
     display: none;
   }
+  .brand-title {
+    font-size: 1.15rem;
+  }
+  .brand-sub {
+    font-size: 0.58rem;
+    letter-spacing: 0.2px;
+  }
+  .navbar-inner {
+    padding: 0 0.75rem;
+  }
+  .nav-links {
+    gap: 2px;
+  }
+  .nav-icon-btn {
+    width: 32px;
+    height: 32px;
+  }
   .mobile-toggle {
     display: flex;
   }
   .mobile-menu {
     display: flex;
     flex-direction: column;
-    padding: 1rem 1.5rem;
+    padding: 0.75rem 1rem;
     background: var(--surface-1);
     border-top: 1px solid var(--divider);
     border-bottom: 1px solid var(--divider);
-    gap: 8px;
+    gap: 4px;
     position: absolute;
     top: 60px;
     left: 0;
@@ -224,14 +241,15 @@ const isMobileMenuOpen = ref(false)
   .mobile-nav-btn {
     width: 100%;
     text-align: left;
-    padding: 12px 16px;
-    border-radius: var(--radius-md);
+    padding: 12px 14px;
+    border-radius: var(--radius-sm);
     background: transparent;
     color: var(--text-secondary);
     border: none;
-    font-size: 1rem;
+    font-size: 0.95rem;
     font-weight: 500;
     cursor: pointer;
+    transition: color 0.15s, background 0.15s;
   }
   .mobile-nav-btn-active {
     color: var(--primary);
