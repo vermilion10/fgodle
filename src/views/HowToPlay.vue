@@ -18,18 +18,18 @@
           <li>Search and select any servant to make a guess</li>
           <li>You have <strong class="accent">8 attempts</strong> to guess correctly</li>
           <li>After each guess, cells reveal how close you are to the answer</li>
-          <li><strong class="accent">Tip:</strong> The servant's Class badge color matches their NP Card type — Red = Buster, Blue = Arts, Green = Quick</li>
+          <li><strong class="accent">Tip:</strong> The servant's Class badge color matches their NP Card type - Red = Buster, Blue = Arts, Green = Quick</li>
           <li>The daily servant resets at midnight every day</li>
         </ul>
       </section>
 
       <section class="htp-section">
-        <h2 class="section-title">💡 Hint Rows <span class="tag-daily">Daily only</span></h2>
+        <h2 class="section-title"><i class="fa-solid fa-lightbulb"></i> Hint Rows <span class="tag-daily">Daily only</span></h2>
         <p class="hint-intro">Rows <strong class="accent">5</strong> and <strong class="accent">8</strong> are special Hint Rows that start locked.</p>
         <ul class="rules-list">
-          <li>When you reach <strong class="accent">row 5</strong> (after 4 guesses), it unlocks — click <strong class="accent">1 cell</strong> to peek at the answer's exact value</li>
-          <li>When you reach <strong class="accent">row 8</strong> (your final attempt), it unlocks — reveal up to <strong class="accent">3 cells</strong></li>
-          <li>Revealing a hint is optional — you can skip and guess directly</li>
+          <li>When you reach <strong class="accent">row 5</strong> (after 4 guesses), it unlocks - click <strong class="accent">1 cell</strong> to peek at the answer's exact value</li>
+          <li>When you reach <strong class="accent">row 8</strong> (your final attempt), it unlocks - reveal up to <strong class="accent">3 cells</strong></li>
+          <li>Revealing a hint is optional - you can skip and guess directly</li>
           <li>Once you submit on a hint row, it shows normal results like all other rows</li>
         </ul>
       </section>
@@ -40,7 +40,7 @@
         <div class="color-example">
           <div class="example-cell cell-correct">
             <span>Saber</span>
-            <span class="ex-icon">✓</span>
+            <span class="ex-icon"><i class="fa-solid fa-check"></i></span>
           </div>
           <div class="example-info">
             <strong class="correct-label">Correct</strong>
@@ -50,11 +50,11 @@
 
         <div class="color-example">
           <div class="example-cell cell-partial">
-            <span>★★★★</span>
+            <span><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></span>
             <span class="ex-icon">~</span>
           </div>
           <div class="example-info">
-            <strong class="partial-label">Close — rarity only</strong>
+            <strong class="partial-label">Close - rarity only</strong>
             <p>The rarity is within ±1 star of the answer</p>
           </div>
         </div>
@@ -62,7 +62,7 @@
         <div class="color-example">
           <div class="example-cell cell-wrong">
             <span>Lancer</span>
-            <span class="ex-icon">✗</span>
+            <span class="ex-icon"><i class="fa-solid fa-xmark"></i></span>
           </div>
           <div class="example-info">
             <strong class="wrong-label">Wrong</strong>
@@ -75,7 +75,7 @@
         <h2 class="section-title">Attributes Compared</h2>
         <div class="attr-grid">
           <div class="attr-card" v-for="attr in attributes" :key="attr.name">
-            <span class="attr-icon">{{ attr.icon }}</span>
+            <span class="attr-icon" v-html="attr.icon"></span>
             <div>
               <strong>{{ attr.name }}</strong>
               <p>{{ attr.desc }}</p>
@@ -88,11 +88,11 @@
         <h2 class="section-title">Game Modes</h2>
         <div class="mode-cards">
           <div class="mode-card">
-            <div class="mode-card-title">📅 Daily Mode</div>
+            <div class="mode-card-title"><i class="fa-solid fa-calendar-day"></i> Daily Mode</div>
             <p>A new servant every day, shared globally. Your progress is saved. Includes Hint Rows at rows 5 and 8.</p>
           </div>
           <div class="mode-card">
-            <div class="mode-card-title">♾ Unlimited Mode</div>
+            <div class="mode-card-title"><i class="fa-solid fa-infinity"></i> Unlimited Mode</div>
             <p>Guess randomly selected servants endlessly. Choose your difficulty:</p>
             <ul class="diff-list">
               <li><span class="diff-tag easy">Easy</span> 12 guesses, relaxed</li>
@@ -112,13 +112,13 @@
 
 <script setup lang="ts">
 const attributes = [
-  { icon: '⚔', name: 'Class', desc: 'Saber, Archer, Rider, etc.' },
-  { icon: '★', name: 'Rarity', desc: '1–5 stars (orange if within ±1)' },
-  { icon: '🌐', name: 'Attribute', desc: 'Sky, Earth, Human, Star, or Beast' },
-  { icon: '⚥', name: 'Gender', desc: 'Male, Female, or Unknown' },
-  { icon: '⚖', name: 'Alignment', desc: 'Lawful/Chaotic/Neutral + Good/Evil/Balanced' },
-  { icon: '🃏', name: 'NP Card', desc: 'Buster, Arts, or Quick' },
-  { icon: '🎯', name: 'NP Target', desc: 'Single, AoE, or Support' },
+  { icon: '<i class="fa-solid fa-khanda"></i>', name: 'Class', desc: 'Saber, Archer, Rider, etc.' },
+  { icon: '<i class="fa-solid fa-star"></i>', name: 'Rarity', desc: '1–5 stars (orange if within ±1)' },
+  { icon: '<i class="fa-solid fa-globe"></i>', name: 'Attribute', desc: 'Sky, Earth, Human, Star, or Beast' },
+  { icon: '<i class="fa-solid fa-venus-mars"></i>', name: 'Gender', desc: 'Male, Female, or Unknown' },
+  { icon: '<i class="fa-solid fa-scale-balanced"></i>', name: 'Alignment', desc: 'Lawful/Chaotic/Neutral + Good/Evil/Balanced' },
+  { icon: '<i class="fa-solid fa-clone"></i>', name: 'NP Card', desc: 'Buster, Arts, or Quick' },
+  { icon: '<i class="fa-solid fa-bullseye"></i>', name: 'NP Target', desc: 'Single, AoE, or Support' },
 ]
 </script>
 

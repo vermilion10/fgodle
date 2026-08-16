@@ -18,6 +18,11 @@
           </svg>
         </button>
 
+        <!-- Region toggle -->
+        <button class="nav-icon-btn server-toggle" @click="store.setServer(store.server === 'JP' ? 'NA' : 'JP')" :title="'Switch to ' + (store.server === 'JP' ? 'NA' : 'JP') + ' Server'" aria-label="Toggle server">
+          <span style="font-size: 0.75rem; font-weight: bold; font-family: var(--font-body)">{{ store.server }}</span>
+        </button>
+
         <!-- Theme toggle -->
         <button class="nav-icon-btn" @click="store.toggleTheme()" :title="store.theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'" aria-label="Toggle theme">
           <!-- Moon (dark mode active) -->
@@ -34,16 +39,41 @@
           </svg>
         </button>
 
+        <router-link to="/" custom v-slot="{ navigate, isExactActive }">
+          <button class="nav-btn" :class="{ 'nav-btn-filled': isExactActive }" @click="navigate">Game</button>
+        </router-link>
+        <router-link to="/archive" custom v-slot="{ navigate, isExactActive }">
+          <button class="nav-btn" :class="{ 'nav-btn-filled': isExactActive }" @click="navigate">Archive</button>
+        </router-link>
         <button class="nav-btn" @click="store.showAbout = true">About</button>
         <button class="nav-btn nav-btn-filled" @click="store.showHowToPlay = true">How to Play</button>
+        <!-- Mobile Menu Toggle -->
+        <button class="nav-icon-btn mobile-toggle" @click="isMobileMenuOpen = !isMobileMenuOpen" aria-label="Toggle menu">
+          <i class="fa-solid fa-bars" v-if="!isMobileMenuOpen"></i>
+          <i class="fa-solid fa-xmark" v-else></i>
+        </button>
       </div>
+    </div>
+
+    <!-- Mobile Dropdown -->
+    <div class="mobile-menu" v-if="isMobileMenuOpen">
+      <router-link to="/" custom v-slot="{ navigate, isExactActive }">
+        <button class="mobile-nav-btn" :class="{ 'mobile-nav-btn-active': isExactActive }" @click="navigate; isMobileMenuOpen = false">Game</button>
+      </router-link>
+      <router-link to="/archive" custom v-slot="{ navigate, isExactActive }">
+        <button class="mobile-nav-btn" :class="{ 'mobile-nav-btn-active': isExactActive }" @click="navigate; isMobileMenuOpen = false">Archive</button>
+      </router-link>
+      <button class="mobile-nav-btn" @click="store.showAbout = true; isMobileMenuOpen = false">About</button>
+      <button class="mobile-nav-btn mobile-nav-btn-filled" @click="store.showHowToPlay = true; isMobileMenuOpen = false">How to Play</button>
     </div>
   </nav>
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue'
 import { useServantStore } from '../stores/servantStore'
 const store = useServantStore()
+const isMobileMenuOpen = ref(false)
 </script>
 
 <style scoped>
@@ -159,5 +189,57 @@ const store = useServantStore()
 
 [data-theme="light"] .nav-btn-filled:hover {
   background: rgba(138, 104, 32, 0.16);
+}
+
+.mobile-toggle {
+  display: none;
+  font-size: 1.1rem;
+}
+
+.mobile-menu {
+  display: none;
+}
+
+@media (max-width: 600px) {
+  .nav-btn {
+    display: none;
+  }
+  .mobile-toggle {
+    display: flex;
+  }
+  .mobile-menu {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem 1.5rem;
+    background: var(--surface-1);
+    border-top: 1px solid var(--divider);
+    border-bottom: 1px solid var(--divider);
+    gap: 8px;
+    position: absolute;
+    top: 60px;
+    left: 0;
+    right: 0;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  }
+  .mobile-nav-btn {
+    width: 100%;
+    text-align: left;
+    padding: 12px 16px;
+    border-radius: var(--radius-md);
+    background: transparent;
+    color: var(--text-secondary);
+    border: none;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+  }
+  .mobile-nav-btn-active {
+    color: var(--primary);
+    background: var(--primary-bg);
+  }
+  .mobile-nav-btn-filled {
+    color: var(--primary);
+    background: var(--surface-2);
+  }
 }
 </style>

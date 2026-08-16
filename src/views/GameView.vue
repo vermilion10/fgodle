@@ -9,7 +9,7 @@
 
     <!-- Error -->
     <div v-else-if="store.error" class="error-state">
-      <div class="error-icon">⚠</div>
+      <div class="error-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
       <h3>Connection Failed</h3>
       <p>{{ store.error }}</p>
       <button class="btn-retry" @click="store.fetchServants()">Retry</button>
@@ -25,21 +25,21 @@
           </h1>
           <p class="hero-subtitle">Guess today's Fate/Grand Order servant</p>
 
-          <!-- Mode toggle — M3 Segmented Button -->
+          <!-- Mode toggle - M3 Segmented Button -->
           <div class="mode-toggle" role="group" aria-label="Game mode">
             <button
               class="mode-btn"
               :class="{ active: store.gameMode === 'daily' }"
               @click="store.startNewGame('daily')"
             >
-              <span class="mode-icon">📅</span> Daily
+              <span class="mode-icon"><i class="fa-solid fa-calendar-day"></i></span> Daily
             </button>
             <button
               class="mode-btn"
               :class="{ active: store.gameMode === 'unlimited' }"
               @click="store.startNewGame('unlimited')"
             >
-              <span class="mode-icon">♾</span> Unlimited
+              <span class="mode-icon"><i class="fa-solid fa-infinity"></i></span> Unlimited
             </button>
           </div>
 
@@ -244,7 +244,7 @@ const progressPct = computed(() => {
   margin-bottom: 1.5rem;
 }
 
-/* Mode toggle — M3 Segmented Button */
+/* Mode toggle - M3 Segmented Button */
 .mode-toggle {
   display: inline-flex;
   background: var(--surface-1);
@@ -284,7 +284,7 @@ const progressPct = computed(() => {
   color: var(--primary);
 }
 
-/* Difficulty — M3 Filter Chips */
+/* Difficulty - M3 Filter Chips */
 .difficulty-row {
   display: flex;
   gap: 8px;

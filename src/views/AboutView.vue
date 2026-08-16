@@ -12,14 +12,14 @@
       <section class="rule-section">
         <h2 class="section-title">Features</h2>
         <ul class="feature-list">
-          <li><strong>Daily Mode</strong> — A new servant every day. Your progress and streak are saved locally.</li>
-          <li><strong>Unlimited Mode</strong> — Play with random servants. Choose Easy, Normal, or Hard difficulty.</li>
-          <li><strong>Hint Rows</strong> <em>(Daily only)</em> — Rows 5 and 8 let you peek at the answer's attributes before guessing.</li>
-          <li><strong>Reveal Animation</strong> — Card-flip reveal column by column, just like classic Wordle.</li>
-          <li><strong>Detailed Clues</strong> — Rarity, Class, NP Card, NP Type, Attribute, Alignment, and Gender.</li>
-          <li><strong>Share Your Result</strong> — Generate a shareable image with a QR code linking back to FGOdle.</li>
-          <li><strong>Always Up to Date</strong> — Servant data synced automatically via GitHub Actions and Atlas Academy API.</li>
-          <li><strong>Mobile Responsive</strong> — Fully scrollable grid on any screen size.</li>
+          <li><strong>Daily Mode</strong> - A new servant every day. Your progress and streak are saved locally.</li>
+          <li><strong>Unlimited Mode</strong> - Play with random servants. Choose Easy, Normal, or Hard difficulty.</li>
+          <li><strong>Hint Rows</strong> <em>(Daily only)</em> - Rows 5 and 8 let you peek at the answer's attributes before guessing.</li>
+          <li><strong>Reveal Animation</strong> - Card-flip reveal column by column, just like classic Wordle.</li>
+          <li><strong>Detailed Clues</strong> - Rarity, Class, NP Card, NP Type, Attribute, Alignment, and Gender.</li>
+          <li><strong>Share Your Result</strong> - Generate a shareable image with a QR code linking back to FGOdle.</li>
+          <li><strong>Always Up to Date</strong> - Servant data synced automatically via GitHub Actions and Atlas Academy API.</li>
+          <li><strong>Mobile Responsive</strong> - Fully scrollable grid on any screen size.</li>
         </ul>
       </section>
 
@@ -36,10 +36,10 @@
       <section class="rule-section">
         <h2 class="section-title">Credits</h2>
         <ul class="credit-list">
-          <li><strong>Data Source</strong> — <a href="https://api.atlasacademy.io/" target="_blank">Atlas Academy API</a></li>
-          <li><strong>Game Concept</strong> — Inspired by the original Wordle and various fandom iterations</li>
-          <li><strong>Animations</strong> — GIFs via <a href="https://tenor.com/" target="_blank">Tenor</a></li>
-          <li><strong>Developer</strong> — <a href="https://vermilion10.pages.dev/" target="_blank">vermilion10</a></li>
+          <li><strong>Data Source</strong> - <a href="https://api.atlasacademy.io/" target="_blank">Atlas Academy API</a></li>
+          <li><strong>Game Concept</strong> - Inspired by the original Wordle and various fandom iterations</li>
+          <li><strong>Animations</strong> - GIFs via <a href="https://tenor.com/" target="_blank">Tenor</a></li>
+          <li><strong>Developer</strong> - <a href="https://vermilion10.pages.dev/" target="_blank">vermilion10</a></li>
         </ul>
       </section>
       

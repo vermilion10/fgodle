@@ -75,7 +75,7 @@
                 <span class="y-tag class-tag" :class="'np-' + store.yesterdayServant.npCard">
                   {{ formatClass(store.yesterdayServant.className) }}
                 </span>
-                <span class="y-tag">{{ '★'.repeat(store.yesterdayServant.rarity) }}</span>
+                <span class="y-tag" v-html="'<i class=\'fa-solid fa-star\'></i>'.repeat(store.yesterdayServant.rarity)"></span>
                 <span class="y-tag">{{ store.yesterdayServant.attribute }}</span>
               </div>
             </div>

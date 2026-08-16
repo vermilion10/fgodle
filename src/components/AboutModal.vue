@@ -20,18 +20,21 @@
           <section class="rule-section">
             <h3 class="section-label">Features</h3>
             <ul class="feature-list">
-              <li><strong>Daily Mode</strong> — A new servant every day. Progress and streak saved locally.</li>
-              <li><strong>Unlimited Mode</strong> — Random servants with Easy, Normal, or Hard difficulty.</li>
-              <li><strong>Hint Rows</strong> <em>(Daily only)</em> — Rows 5 and 8 let you peek at the answer's attributes before guessing.</li>
-              <li><strong>Reveal Animation</strong> — Card-flip reveal column by column, just like classic Wordle.</li>
-              <li><strong>Detailed Clues</strong> — Rarity, Class, NP Card, NP Type, Attribute, Alignment, and Gender.</li>
-              <li><strong>Share Your Result</strong> — Generate a shareable image with a QR code linking back to FGOdle.</li>
-              <li><strong>Battle Records</strong> — Track your win rate, current streak, best streak, and guess distribution history. Open from the chart icon in the navbar.</li>
-              <li><strong>Class Filter Chips</strong> — Quickly narrow your search by servant class — Saber, Archer, Lancer, and more.</li>
-              <li><strong>Yesterday's Servant</strong> — Missed a day? Check what servant was featured yesterday inside Battle Records.</li>
-              <li><strong>Light / Dark Mode</strong> — Switch between dark and warm light themes using the moon/sun icon in the navbar.</li>
-              <li><strong>Always Up to Date</strong> — Servant data synced automatically via GitHub Actions and Atlas Academy API.</li>
-              <li><strong>Mobile Responsive</strong> — Fully scrollable grid on any screen size.</li>
+              <li><strong>Daily Mode</strong> - A new servant every day. Progress and streak saved locally.</li>
+              <li><strong>Unlimited Mode</strong> - Random servants with Easy, Normal, or Hard difficulty.</li>
+              <li><strong>Hint Rows</strong> <em>(Daily only)</em> - Rows 5 and 8 let you peek at the answer's attributes before guessing.</li>
+              <li><strong>Reveal Animation</strong> - Card-flip reveal column by column, just like classic Wordle.</li>
+              <li><strong>Detailed Clues</strong> - Rarity, Class, NP Card, NP Type, Attribute, Alignment, and Gender.</li>
+              <li><strong>Share Your Result</strong> - Generate a shareable image with a QR code linking back to FGOdle.</li>
+              <li><strong>Battle Records</strong> - Track your win rate, current streak, best streak, and guess distribution history. Open from the chart icon in the navbar.</li>
+              <li><strong>Class Filter Chips</strong> - Quickly narrow your search by servant class - Saber, Archer, Lancer, and more.</li>
+              <li><strong>Yesterday's Servant</strong> - Missed a day? Check what servant was featured yesterday inside Battle Records.</li>
+              <li><strong>Light / Dark Mode</strong> - Switch between dark and warm light themes using the moon/sun icon in the navbar.</li>
+              <li><strong>Always Up to Date</strong> - Servant data synced automatically from both JP and NA servers via GitHub Actions and Atlas Academy API.</li>
+              <li><strong>Servant Archive</strong> - Browse the complete database of servants.</li>
+              <li><strong>JP / NA Server Toggle</strong> - Instantly switch between the JP and NA server rosters.</li>
+              <li><strong>Smart Search</strong> - Look up servants by name or alias without worrying about accents or diacritics.</li>
+              <li><strong>Mobile Responsive</strong> - Fully scrollable grid and a mobile-optimized menu on any screen size.</li>
             </ul>
           </section>
 
@@ -49,10 +52,10 @@
           <section class="rule-section">
             <h3 class="section-label">Credits</h3>
             <ul class="credit-list">
-              <li><strong>Data Source</strong> — <a href="https://api.atlasacademy.io/" target="_blank" rel="noopener">Atlas Academy API</a></li>
-              <li><strong>Game Concept</strong> — Inspired by the original Wordle and various fandom iterations</li>
-              <li><strong>Animations</strong> — GIFs via <a href="https://tenor.com/" target="_blank" rel="noopener">Tenor</a></li>
-              <li><strong>Developer</strong> — <a href="https://vermilion10.pages.dev/" target="_blank" rel="noopener">vermilion10</a></li>
+              <li><strong>Data Source</strong> - <a href="https://api.atlasacademy.io/" target="_blank" rel="noopener">Atlas Academy API</a></li>
+              <li><strong>Game Concept</strong> - Inspired by the original Wordle and various fandom iterations</li>
+              <li><strong>Animations</strong> - GIFs via <a href="https://tenor.com/" target="_blank" rel="noopener">Tenor</a></li>
+              <li><strong>Developer</strong> - <a href="https://vermilion10.pages.dev/" target="_blank" rel="noopener">vermilion10</a></li>
             </ul>
           </section>
         </div>

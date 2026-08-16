@@ -30,7 +30,7 @@
               <span class="tag class-tag" :class="'np-' + store.todayAnswer.npCard">
                 {{ formatClass(store.todayAnswer.className) }}
               </span>
-              <span class="tag rarity-tag">{{ '★'.repeat(store.todayAnswer.rarity) }}</span>
+              <span class="tag rarity-tag" v-html="'<i class=\'fa-solid fa-star\'></i>'.repeat(store.todayAnswer.rarity)"></span>
               <span class="tag">{{ store.todayAnswer.attribute }}</span>
             </div>
           </div>
@@ -52,7 +52,7 @@
           <div class="daily-actions">
             <div class="share-row">
               <button class="btn-outlined" @click="store.showStats = true">
-                📊 Stats
+                <i class="fa-solid fa-chart-bar"></i> Stats
               </button>
               <button class="btn-outlined" @click="saveResult" :disabled="isSharing">
                 {{ isSharing ? 'Wait…' : 'Save' }}
@@ -69,7 +69,7 @@
         </template>
         <template v-else>
           <div class="unlimited-actions">
-            <button class="btn-outlined" @click="store.showStats = true">📊 Stats</button>
+            <button class="btn-outlined" @click="store.showStats = true"><i class="fa-solid fa-chart-bar"></i> Stats</button>
             <button class="btn-filled" @click="store.playAgain()">Play Again</button>
           </div>
         </template>
@@ -78,11 +78,11 @@
   </Transition>
 
   <!-- Hidden Share Layout -->
-  <div v-show="store.gameOver" class="share-export-container">
+  <div v-show="store.gameOver" class="share-export-container" :data-theme="store.theme">
     <div class="share-card-layout" ref="shareRef">
       
       <div class="share-header">
-        <img :src="BASE_URL + 'fgo_diamond.webp'" class="share-logo" crossorigin="anonymous" />
+        <img :src="BASE_URL + 'fgo_diamond.webp'" class="share-logo" />
         <div class="share-title-box">
           <h1 class="share-title">FGO<span class="accent">dle</span></h1>
           <p class="share-date">{{ getShareDate() }}</p>
@@ -147,9 +147,10 @@ async function generateCanvas() {
   try {
     const canvas = await html2canvas(shareRef.value, {
       useCORS: true,
-      backgroundColor: '#131318',
+      backgroundColor: store.theme === 'dark' ? '#131318' : '#f0ede6',
       scale: 2,
-      logging: false
+      logging: false,
+      ignoreElements: (node) => node.tagName?.toLowerCase() === 'iframe'
     })
     return canvas.toDataURL('image/png')
   } catch (e) {
@@ -443,12 +444,12 @@ function downloadImage(dataUrl: string) {
 }
 
 .share-card-layout {
-  background: #131318;
-  border: 1px solid rgba(255,255,255,0.08);
+  background: var(--surface-1);
+  border: 1px solid var(--border-medium);
   border-radius: 16px;
   padding: 2.5rem;
   width: 500px;
-  color: #e5e0d8;
+  color: var(--text-primary);
 }
 
 .share-header {
@@ -457,7 +458,7 @@ function downloadImage(dataUrl: string) {
   gap: 1rem;
   margin-bottom: 2rem;
   padding-bottom: 1rem;
-  border-bottom: 1px solid rgba(255,255,255,0.08);
+  border-bottom: 1px solid var(--border-medium);
 }
 
 .share-logo { width: 44px; height: 44px; }
@@ -465,14 +466,14 @@ function downloadImage(dataUrl: string) {
 .share-title-box h1 {
   font-family: var(--font-title);
   font-size: 2rem;
-  color: #ffffff;
+  color: var(--text-primary);
   margin: 0;
   letter-spacing: 1px;
 }
 
 .share-title-box .accent { color: var(--primary); }
 
-.share-date { font-size: 0.85rem; color: #5e5e72; }
+.share-date { font-size: 0.85rem; color: var(--text-muted); }
 
 .share-result-area {
   text-align: center;
@@ -487,14 +488,14 @@ function downloadImage(dataUrl: string) {
 
 .lose-text {
   font-family: var(--font-title);
-  color: #9b3636;
+  color: var(--danger);
   font-size: 1.8rem;
 }
 
 .share-tries {
   font-size: 1rem;
   margin-top: 0.5rem;
-  color: #9e9aaa;
+  color: var(--text-secondary);
 }
 
 .share-footer {
@@ -502,13 +503,13 @@ function downloadImage(dataUrl: string) {
   align-items: center;
   justify-content: center;
   gap: 1.5rem;
-  background: #1e1e26;
+  background: var(--surface-2);
   padding: 1.25rem;
   border-radius: 12px;
 }
 
-.share-qr { border: 3px solid #fff; border-radius: 4px; }
+.share-qr { border: 3px solid var(--surface-3); border-radius: 4px; }
 
 .share-meta p { color: var(--primary); font-weight: 600; font-size: 0.95rem; margin-bottom: 0.2rem; }
-.share-meta span { color: #5e5e72; font-size: 0.82rem; }
+.share-meta span { color: var(--text-muted); font-size: 0.82rem; }
 </style>

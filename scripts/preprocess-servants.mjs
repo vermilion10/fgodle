@@ -13,8 +13,11 @@ import { resolve, dirname } from 'path'
 import { fileURLToPath } from 'url'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
-const OUT_PATH = resolve(__dirname, '../public/fgo-servants.json')
-const API_URL = 'https://api.atlasacademy.io/export/JP/nice_servant_lang_en.json'
+const OUT_PATH_JP = resolve(__dirname, '../public/fgo-servants-jp.json')
+const OUT_PATH_NA = resolve(__dirname, '../public/fgo-servants-na.json')
+
+const API_URL_JP = 'https://api.atlasacademy.io/export/JP/nice_servant_lang_en.json'
+const API_URL_NA = 'https://api.atlasacademy.io/export/NA/nice_servant.json'
 
 // Servant types to include
 const PLAYABLE_TYPES = new Set(['normal', 'heroine'])
@@ -122,61 +125,53 @@ function getAliases(servant) {
   return [...aliases].filter(Boolean)
 }
 
+async function processRegion(url, outPath, regionName) {
+  console.log(`\n📡 Fetching ${regionName} from Atlas API: ${url}...`)
+  const res = await fetch(url)
+  if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`)
+  const raw = await res.json()
+  console.log(`✅ Loaded ${raw.length} raw entries for ${regionName}`)
+
+  const servants = raw
+    .filter(s =>
+      PLAYABLE_TYPES.has(s.type) &&
+      !EXCLUDED_CLASSES.has(s.className) &&
+      s.rarity > 0 &&
+      s.collectionNo > 0
+    )
+    .map(s => {
+      const { npCard, npTarget } = getNpInfo(s)
+
+      return {
+        id: s.id,
+        collectionNo: s.collectionNo,
+        name: s.name,
+        className: s.className,
+        rarity: s.rarity,
+        attribute: s.attribute,
+        gender: getGender(s.traits),
+        alignment: getAlignment(s.traits),
+        face: s.extraAssets?.faces?.ascension?.['1'] ?? s.face ?? '',
+        npCard,       // "buster" | "quick" | "arts"
+        npTarget,     // "aoe" | "single" | "support"
+        aliases: getAliases(s),
+      }
+    })
+    .sort((a, b) => a.collectionNo - b.collectionNo)
+
+  const json = JSON.stringify(servants)
+  writeFileSync(outPath, json, 'utf-8')
+
+  const sizeKB = (json.length / 1024).toFixed(1)
+  console.log(`✅ Processed ${servants.length} playable servants for ${regionName}`)
+  console.log(`💾 Saved to: ${outPath} (${sizeKB} KB)`)
+}
+
 async function main() {
   try {
     console.log('⚗ FGO Wordle Data Preprocessor')
-    console.log(`📡 Fetching from Atlas API: ${API_URL}... (this might take a minute)`)
-    
-    const res = await fetch(API_URL)
-    if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`)
-    const raw = await res.json()
-    console.log(`✅ Loaded ${raw.length} raw entries`)
-
-    const servants = raw
-      .filter(s =>
-        PLAYABLE_TYPES.has(s.type) &&
-        !EXCLUDED_CLASSES.has(s.className) &&
-        s.rarity > 0 &&
-        s.collectionNo > 0
-      )
-      .map(s => {
-        const { npCard, npTarget } = getNpInfo(s)
-
-        return {
-          id: s.id,
-          collectionNo: s.collectionNo,
-          name: s.name,
-          className: s.className,
-          rarity: s.rarity,
-          attribute: s.attribute,
-          gender: getGender(s.traits),
-          alignment: getAlignment(s.traits),
-          face: s.extraAssets?.faces?.ascension?.['1'] ?? s.face ?? '',
-          npCard,       // "buster" | "quick" | "arts"
-          npTarget,     // "aoe" | "single" | "support"
-          aliases: getAliases(s),
-        }
-      })
-      .sort((a, b) => a.collectionNo - b.collectionNo)
-
-    const json = JSON.stringify(servants)
-    writeFileSync(OUT_PATH, json, 'utf-8')
-
-    const sizeKB = (json.length / 1024).toFixed(1)
-    console.log(`\n✅ Processed ${servants.length} playable servants`)
-    console.log(`💾 Saved to: ${OUT_PATH}`)
-    console.log(`📦 File size: ${sizeKB} KB`)
-
-    // Stats
-    const npCardCount = {}
-    const npTargetCount = {}
-    servants.forEach(s => {
-      npCardCount[s.npCard] = (npCardCount[s.npCard] ?? 0) + 1
-      npTargetCount[s.npTarget] = (npTargetCount[s.npTarget] ?? 0) + 1
-    })
-    console.log('\n📊 NP Card Types:', npCardCount)
-    console.log('🎯 NP Target Types:', npTargetCount)
-    
+    await processRegion(API_URL_JP, OUT_PATH_JP, 'JP')
+    await processRegion(API_URL_NA, OUT_PATH_NA, 'NA')
   } catch (err) {
     console.error('❌ Error:', err.message)
     process.exit(1)

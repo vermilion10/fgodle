@@ -2,8 +2,6 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import type { SlimServant, GuessRow, GuessResult, Difficulty, HintableColumn } from '../types/servant'
 
-const SERVANTS_URL = import.meta.env.BASE_URL + 'fgo-servants.json'
-
 // Hint rows at 0-indexed positions 4 and 7
 export const HINT_ROW_CONFIG = [
   { rowIdx: 4, maxReveal: 1 },
@@ -52,6 +50,17 @@ function compareGuess(guessed: SlimServant, answer: SlimServant): GuessRow['resu
 }
 
 export const useServantStore = defineStore('servant', () => {
+  const savedServer = localStorage.getItem('fgo-wordle-server') || 'JP'
+  const server = ref<'JP' | 'NA'>(savedServer as 'JP' | 'NA')
+
+  function setServer(newServer: 'JP' | 'NA') {
+    if (server.value === newServer) return
+    server.value = newServer
+    localStorage.setItem('fgo-wordle-server', newServer)
+    localStorage.removeItem('fgo-wordle-state') // Clear daily state when switching server
+    fetchServants()
+  }
+
   const allServants = ref<SlimServant[]>([])
   const loading = ref(false)
   const error = ref<string | null>(null)
@@ -169,8 +178,12 @@ export const useServantStore = defineStore('servant', () => {
 
   const searchQuery = ref('')
 
+  function normalizeString(str: string) {
+    return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim()
+  }
+
   const filteredServants = computed(() => {
-    const q = searchQuery.value.toLowerCase().trim()
+    const q = normalizeString(searchQuery.value)
     if (!q) return []
     const guessedIds = new Set(guesses.value.map(g => g.servant.id))
     return allServants.value
@@ -178,9 +191,9 @@ export const useServantStore = defineStore('servant', () => {
         if (guessedIds.has(s.id)) return false
         // Class filter
         if (classFilter.value && s.className !== classFilter.value) return false
-        if (s.name.toLowerCase().includes(q)) return true
-        if (s.className.toLowerCase().includes(q)) return true
-        if (s.aliases.some(a => a.toLowerCase().includes(q))) return true
+        if (normalizeString(s.name).includes(q)) return true
+        if (normalizeString(s.className).includes(q)) return true
+        if (s.aliases.some(a => normalizeString(a).includes(q))) return true
         return false
       })
       .slice(0, 12)
@@ -191,7 +204,8 @@ export const useServantStore = defineStore('servant', () => {
     error.value = null
     loadStats()
     try {
-      const res = await fetch(SERVANTS_URL)
+      const url = import.meta.env.BASE_URL + `fgo-servants-${server.value.toLowerCase()}.json`
+      const res = await fetch(url)
       if (!res.ok) throw new Error(`Failed to load servant data (${res.status})`)
       allServants.value = await res.json()
       startNewGame()
@@ -317,6 +331,7 @@ export const useServantStore = defineStore('servant', () => {
     classFilter,
     stats, showStats, showAbout, showHowToPlay,
     theme, toggleTheme,
+    server, setServer,
     yesterdayServant,
     fetchServants, submitGuess, startNewGame, playAgain, setDifficulty, revealHint,
   }

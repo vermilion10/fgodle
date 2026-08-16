@@ -21,6 +21,11 @@ const router = createRouter({
       name: 'about',
       component: AboutView,
     },
+    {
+      path: '/archive',
+      name: 'archive',
+      component: () => import('../views/ArchiveView.vue'),
+    },
   ],
 })
 

@@ -29,7 +29,7 @@
         @keydown.escape="store.searchQuery = ''"
       />
       <div v-else class="search-disabled-text">
-        {{ store.won ? '✨ Correct!' : '💀 Game Over' }}
+        {{ store.won ? '<i class="fa-solid fa-wand-magic-sparkles"></i> Correct!' : '<i class="fa-solid fa-skull"></i> Game Over' }}
       </div>
     </div>
 
@@ -50,7 +50,7 @@
               <span class="tag class-tag" :class="'np-' + servant.npCard">
                 {{ formatClass(servant.className) }}
               </span>
-              <span class="tag rarity-tag">{{ '★'.repeat(servant.rarity) }}</span>
+              <span class="tag rarity-tag" v-html="'<i class=\'fa-solid fa-star\'></i>'.repeat(servant.rarity)"></span>
             </div>
           </div>
         </div>

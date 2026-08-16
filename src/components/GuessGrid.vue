@@ -33,13 +33,13 @@
             :class="[resultClass(getResult(visualIdx - 1, col.key)), isRevealing(visualIdx - 1) ? 'flip' : '']"
             :style="{ '--flip-delay': (ci * 110) + 'ms' }"
           >
-            <component :is="'span'" v-bind="getCellBadgeAttrs(visualIdx - 1, col.key)" class="cell-value">
-              {{ getCellText(visualIdx - 1, col.key) }}
+            <component :is="'span'" v-bind="getCellBadgeAttrs(visualIdx - 1, col.key)" class="cell-value" v-html="getCellText(visualIdx - 1, col.key)">
+              
             </component>
             <span v-if="col.key === 'rarity' && getResult(visualIdx - 1, col.key) === 'partial'" class="hint-arrow">
               {{ Number(store.guesses[visualIdx - 1].results.rarity.value) < (store.todayAnswer?.rarity ?? 0) ? '▲' : '▼' }}
             </span>
-            <span class="result-icon">{{ resultIcon(getResult(visualIdx - 1, col.key)) }}</span>
+            <span class="result-icon" v-html="resultIcon(getResult(visualIdx - 1, col.key))"></span>
           </div>
         </template>
 
@@ -47,19 +47,19 @@
         <template v-else>
           <div class="cell cell-servant" :class="isHintRow(visualIdx - 1) ? 'hint-label-cell' : ''">
             <template v-if="isHintRow(visualIdx - 1)">
-              <span class="hint-row-icon">💡</span>
+              <span class="hint-row-icon"><i class="fa-solid fa-lightbulb"></i></span>
               <div class="hint-label-text">
                 <div class="hint-row-title">Hint Row</div>
                 <div class="hint-row-sub" v-if="isHintActive(visualIdx - 1)">
                   Reveal up to {{ hintMaxReveal(visualIdx - 1) }} cell{{ hintMaxReveal(visualIdx - 1) > 1 ? 's' : '' }}
                 </div>
-                <div class="hint-row-sub" v-else-if="hintUsed(visualIdx - 1)">Used ✓</div>
+                <div class="hint-row-sub" v-else-if="hintUsed(visualIdx - 1)">Used <i class="fa-solid fa-check"></i></div>
                 <div class="hint-row-sub" v-else>Locked</div>
               </div>
             </template>
             <template v-else>
               <div class="servant-face-placeholder"></div>
-              <span class="placeholder-text">—</span>
+              <span class="placeholder-text">-</span>
             </template>
           </div>
 
@@ -73,10 +73,10 @@
               @click="handleHintClick(visualIdx - 1, col.key as any)"
             >
               <template v-if="isHintRevealed(visualIdx - 1, col.key as any) && store.todayAnswer">
-                <component :is="'span'" v-bind="getAnswerCellAttrs(col.key)" class="cell-value">
-                  {{ getAnswerText(col.key) }}
+                <component :is="'span'" v-bind="getAnswerCellAttrs(col.key)" class="cell-value" v-html="getAnswerText(col.key)">
+                  
                 </component>
-                <span class="hint-check">✓</span>
+                <span class="hint-check"><i class="fa-solid fa-check"></i></span>
               </template>
               <template v-else>
                 <span class="hint-dot"></span>
@@ -87,7 +87,7 @@
           <!-- Normal empty cells -->
           <template v-else>
             <div v-for="col in columnDefs" :key="col.key" class="cell empty-cell">
-              <span class="placeholder-dash">—</span>
+              <span class="placeholder-dash">-</span>
             </div>
           </template>
         </template>
@@ -202,7 +202,7 @@ function resultClass(result: GuessResult) {
 }
 
 function resultIcon(result: GuessResult) {
-  return result === 'correct' ? '✓' : result === 'partial' ? '~' : '✗'
+  return result === 'correct' ? '<i class="fa-solid fa-check"></i>' : result === 'partial' ? '~' : '<i class="fa-solid fa-xmark"></i>'
 }
 
 // ─── Cell content helpers ─────────────────────────────────────────────────────
@@ -262,7 +262,7 @@ function getBadgeAttrs(key: string, val: string): Record<string, string> {
 }
 
 function formatValue(key: string, val: string): string {
-  if (key === 'rarity')    return '★'.repeat(Number(val))
+  if (key === 'rarity')    return '<i class="fa-solid fa-star"></i>'.repeat(Number(val))
   if (key === 'className') return formatClass(val)
   if (key === 'attribute') return formatAttr(val)
   if (key === 'gender')    return formatGender(val)
@@ -277,11 +277,11 @@ function formatClass(cls: string): string {
 }
 
 function formatAttr(attr: string): string {
-  return ({ sky: '☀ Sky', earth: '🌿 Earth', human: '👤 Human', star: '★ Star', beast: '🔥 Beast' } as any)[attr] ?? attr
+  return ({ sky: '<i class="fa-solid fa-sun"></i> Sky', earth: '<i class="fa-solid fa-leaf"></i> Earth', human: '<i class="fa-solid fa-user"></i> Human', star: '<i class="fa-solid fa-star"></i> Star', beast: '<i class="fa-solid fa-fire"></i> Beast' } as any)[attr] ?? attr
 }
 
 function formatGender(g: string): string {
-  return g === 'female' ? '♀ Female' : g === 'male' ? '♂ Male' : '⚧ Unknown'
+  return g === 'female' ? '<i class="fa-solid fa-venus"></i> Female' : g === 'male' ? '<i class="fa-solid fa-mars"></i> Male' : '<i class="fa-solid fa-genderless"></i> Unknown'
 }
 </script>
 
@@ -437,7 +437,7 @@ function formatGender(g: string): string {
 
 .hint-row-active {
   opacity: 1;
-  /* subtle fade-in pulse once — not looping */
+  /* subtle fade-in pulse once - not looping */
   animation: hintAppear 0.4s ease;
 }
 

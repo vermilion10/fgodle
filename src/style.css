@@ -9,7 +9,7 @@
   font-display: swap;
 }
 
-/* ─── CSS Variables — MD3 Dark Theme (default) ─── */
+/* ─── CSS Variables - MD3 Dark Theme (default) ─── */
 :root {
   /* Tonal surfaces */
   --bg-primary:     #131318;
@@ -18,7 +18,7 @@
   --surface-3:      #2e2e3a;
   --surface-4:      #353542;
 
-  /* Primary — toned gold */
+  /* Primary - toned gold */
   --primary:        #c8a85a;
   --primary-dim:    #a88b45;
   --primary-bg:     rgba(200, 168, 90, 0.10);
